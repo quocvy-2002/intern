@@ -12,8 +12,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpaceResponse {
     String spaceName;
-    String spaceTypeName;
-    String spaceTypeLevel;
-
+    SpaceTypeResponse spaceType;
     List<SpaceResponse> children;
 }

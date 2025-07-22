@@ -41,10 +41,10 @@ public class SpaceController {
     }
 
     @DeleteMapping("/{spaceId}")
-    public ApiResponse<Void> deleteSpace(@PathVariable String spaceId) {
+    public void deleteSpace(@PathVariable Integer spaceId) {
         spaceService.deleteSubtree(spaceId);
-        return ApiResponse.<Void>builder().build();
     }
+
 
     @PutMapping("/{spaceId}")
     public ApiResponse<SpaceResponse> updateSpace(

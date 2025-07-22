@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreatSpaceRequest {
-    String spaceName;
-    Integer spaceTypeId;
-    Integer parentId;
+public class CreatSpaceTypeRequest {
+    String spaceTypeName;
+    String spaceTypeLevel;
 }

@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateSpaceRequest {
-    String spaceName;
-    String spaceTypeName;
-    String spaceTypeLevel;
+    Integer spaceTypeId;
+    Integer parentId;
 }

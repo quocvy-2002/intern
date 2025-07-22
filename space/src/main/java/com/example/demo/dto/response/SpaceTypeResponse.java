@@ -1,4 +1,4 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreatSpaceRequest {
-    String spaceName;
-    Integer spaceTypeId;
-    Integer parentId;
+public class SpaceTypeResponse {
+    String spaceTypeName;
+    String spaceTypeLevel;
 }

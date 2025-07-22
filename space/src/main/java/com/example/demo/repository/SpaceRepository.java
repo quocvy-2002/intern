@@ -1,6 +1,7 @@
     package com.example.demo.repository;
 
     import com.example.demo.entity.Space;
+    import com.example.demo.entity.SpaceType;
     import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -8,9 +9,9 @@
     import java.util.Optional;
 
     public interface SpaceRepository extends JpaRepository<Space, String> {
-        Optional<Space> findBySpaceId(Integer spaceId);
-        List<Space> findByParentIdIsNull();
-        List<Space> findAllByParentId(Integer spaceId);
-        List<Space> findByParentId(Integer parentId);
+        List<Space> findByParentIsNull();
+        List<Space> findAllByParent(Space parent);
+        Optional<Space> findBySpaceId(Integer spaceIds);
 
+        void deleteAllBySpaceIdIn(List<Integer> allToDelete);
     }

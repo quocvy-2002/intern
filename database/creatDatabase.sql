@@ -1,29 +1,34 @@
+-- Tạo database
 CREATE DATABASE space;
-use space;
+USE space;
+
+-- Tạo bảng spaceType trước vì bảng space tham chiếu đến nó
+CREATE TABLE spaceType (
+    spaceTypeId INT AUTO_INCREMENT PRIMARY KEY,
+    spaceTypeName VARCHAR(255) NOT NULL,
+    spaceTypeLevel VARCHAR(255)
+);
+
+-- Tạo bảng space
 CREATE TABLE space (
-	spaceId VARCHAR(10) PRIMARY KEY,
+    spaceId INT AUTO_INCREMENT PRIMARY KEY,
     spaceName VARCHAR(255) NOT NULL,
     spaceTypeName VARCHAR(255) NOT NULL,
     spaceTypeLevel VARCHAR(255) NOT NULL,
-    parentId VARCHAR(10),
-    FOREIGN KEY (spaceTypeName, spaceTypeLevel) REFERENCES spaceType(spaceTypeName, spaceTypeLevel)
+    parentId INT ,
+    FOREIGN KEY (spaceTypeName) REFERENCES spaceType(spaceTypeName),
+    FOREIGN KEY (spaceTypeLevel) REFERENCES spaceType(spaceTypeLevel),
+    FOREIGN KEY (parentId) REFERENCES space(spaceId)
 );
-ALTER TABLE space
-MODIFY COLUMN parentId INT;
-ALTER TABLE space
-MODIFY COLUMN spaceId INT;
-ALTER TABLE SPACE MODIFY COLUMN spaceId INT NOT NULL AUTO_INCREMENT;
 
-CREATE TABLE spaceType(
-	 spaceTypeName VARCHAR(255) NOT NULL,
-    spaceTypeLevel VARCHAR(255) NOT NULL,
-     PRIMARY KEY (spaceTypeName, spaceTypeLevel)
-);
+-- Chèn dữ liệu vào bảng spaceType
 INSERT INTO spaceType (spaceTypeName, spaceTypeLevel)
-VALUES ('ROOM', '2');
-INSERT INTO spaceType (spaceTypeName, spaceTypeLevel)
-VALUES ('SPACE', 'null');
-INSERT INTO spaceType (spaceTypeName, spaceTypeLevel)
-VALUES ('FLOOl', '1');
-DELETE FROM spaceType;
+VALUES ('ROOM', '2'),
+       ('SPACE', NULL),
+       ('FLOOR', '1');
+
+-- Kiểm tra dữ liệu trong bảng spaceType
 SELECT * FROM spaceType;
+
+-- Kiểm tra dữ liệu trong bảng space (hiện tại chưa có dữ liệu)
+SELECT * FROM space;
