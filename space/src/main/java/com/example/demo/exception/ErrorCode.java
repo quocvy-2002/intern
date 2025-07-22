@@ -11,6 +11,7 @@ public enum ErrorCode {
     SPACE_NOT_FOUND(1003, "Space not found", HttpStatus.NOT_FOUND),
     SPACE_TYPE_NOT_FOUND(1004,"SPACE_TYPE_NOT_FOUND", HttpStatus.NOT_FOUND),
     SPACE_PARENT_NOT_FOUND(1005,"SPACE_PARENT_NOT_FOUND", HttpStatus.NOT_FOUND),
+    EQUIPMENT_NOT_FOUND(1003, "Equipment not found", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

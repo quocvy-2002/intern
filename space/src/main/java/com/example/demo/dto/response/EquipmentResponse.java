@@ -1,18 +1,16 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.Space;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SpaceResponse {
-    Integer spaceId;
-    String spaceName;
-    SpaceTypeResponse spaceType;
-    List<SpaceResponse> children;
+public class EquipmentResponse {
+    Integer equipmentId;
+    String equipmentName;
+    Space space;
 }

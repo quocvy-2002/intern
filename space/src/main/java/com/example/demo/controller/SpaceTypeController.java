@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/space-types")
+@RequestMapping("/api/space-types")
 @RequiredArgsConstructor
 public class SpaceTypeController {
 

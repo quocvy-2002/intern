@@ -1,5 +1,6 @@
-package com.example.demo.dto.response;
+package com.example.demo.dto.request;
 
+import com.example.demo.entity.Space;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SpaceTypeResponse {
-    Integer spaceTypeId;
-    String spaceTypeName;
-    String spaceTypeLevel;
+public class UpdateEquipmentRequest {
+    String equipmentName;
+    Space space;
 }

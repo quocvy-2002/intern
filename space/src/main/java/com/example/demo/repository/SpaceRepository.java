@@ -1,7 +1,6 @@
     package com.example.demo.repository;
 
     import com.example.demo.entity.Space;
-    import com.example.demo.entity.SpaceType;
     import org.springframework.data.jpa.repository.JpaRepository;
 
 
