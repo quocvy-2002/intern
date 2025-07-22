@@ -4,17 +4,25 @@ import com.example.demo.dto.request.CreateEquipmentRequest;
 import com.example.demo.dto.request.UpdateEquipmentRequest;
 import com.example.demo.dto.response.EquipmentResponse;
 import com.example.demo.entity.Equipment;
+import com.example.demo.entity.EquipmentStatusLog;
+import com.example.demo.entity.EquipmentUsageHistory;
 import com.example.demo.entity.Space;
+import com.example.demo.enums.Status;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.EquipmentMapper;
 import com.example.demo.repository.EquipmentRepository;
+import com.example.demo.repository.EquipmentStatusLogRepository;
+import com.example.demo.repository.EquipmentUsageHistoryRepository;
 import com.example.demo.repository.SpaceRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +33,8 @@ public class EquipmentService {
     EquipmentRepository equipmentRepository;
     EquipmentMapper equipmentMapper;
     SpaceRepository spaceRepository;
+    EquipmentUsageHistoryRepository equipmentUsageHistoryRepository;
+    EquipmentStatusLogRepository equipmentStatusLogRepository;
 
     public EquipmentResponse createEquipment(CreateEquipmentRequest createEquipmentRequest) {
         Equipment equipment = equipmentMapper.toEquipment(createEquipmentRequest);
@@ -56,5 +66,42 @@ public class EquipmentService {
         return equipments.stream()
                 .map(equipmentMapper::toEquipmentResponse)
                 .collect(Collectors.toList());
+    }
+    @Transactional
+    public void updateStatus(Integer equipmentId, Status status, BigDecimal currentPowerKW) {
+        if (currentPowerKW == null || currentPowerKW.compareTo(BigDecimal.ZERO) < 0) {
+            throw new AppException(ErrorCode.INVALID_POWER_CONSUMPTION);
+        }
+        if (status == null) {
+            throw new AppException(ErrorCode.INVALID_STATUS);
+        }
+        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId)
+                .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
+        LocalDateTime now = LocalDateTime.now();
+        EquipmentStatusLog log = new EquipmentStatusLog();
+        log.setEquipment(equipment);
+        log.setTimestamp(now);
+        log.setStatus(status);
+        log.setPowerConsumptionKW(currentPowerKW);
+        equipmentStatusLogRepository.save(log);
+        EquipmentStatusLog latestLog = equipmentStatusLogRepository
+                .findTopByEquipmentOrderByTimestampDesc(equipment)
+                .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
+        if (status == Status.ON) {
+            if (latestLog == null || latestLog.getStatus() != Status.ON) {
+                EquipmentUsageHistory history = new EquipmentUsageHistory();
+                history.setEquipment(equipment);
+                history.setStartTime(now);
+                equipmentUsageHistoryRepository.save(history);
+            }
+        } else if (status == Status.OFF) {
+            EquipmentUsageHistory latestHistory = equipmentUsageHistoryRepository
+                    .findTopByEquipmentAndEndTimeIsNullOrderByStartTimeDesc(equipment)
+                    .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
+            if (latestHistory != null) {
+                latestHistory.setEndTime(now);
+                equipmentUsageHistoryRepository.save(latestHistory);
+            }
+        }
     }
 }

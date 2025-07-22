@@ -25,4 +25,9 @@ public class Equipment {
     @JoinColumn(name = "spaceId")
     @JsonIgnore
     Space space;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipmentTypeId", referencedColumnName = "equipmentTypeId")
+    EquipmentType equipmentType;
+
 }

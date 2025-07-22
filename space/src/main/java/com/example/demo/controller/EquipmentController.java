@@ -4,6 +4,7 @@ import com.example.demo.dto.request.CreateEquipmentRequest;
 import com.example.demo.dto.request.UpdateEquipmentRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.EquipmentResponse;
+import com.example.demo.enums.Status;
 import com.example.demo.service.EquipmentService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -60,5 +62,14 @@ public class EquipmentController {
         return ApiResponse.<List<EquipmentResponse>>builder()
                 .result(equipmentService.getEquipmentsBySpaceId(spaceId))
                 .build();
+    }
+
+    @PostMapping("/update-status")
+    public ApiResponse<Void> updateEquipmentStatus(
+            @RequestParam Integer equipmentId,
+            @RequestParam Status status,
+            @RequestParam(required = false) BigDecimal currentPowerKW) {
+        equipmentService.updateStatus(equipmentId, status, currentPowerKW);
+        return ApiResponse.<Void>builder().message("Update successful").build();
     }
 }
