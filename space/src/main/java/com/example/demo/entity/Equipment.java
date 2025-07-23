@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "equipment")
 @Data
@@ -29,5 +31,15 @@ public class Equipment {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "equipmentTypeId", referencedColumnName = "equipmentTypeId")
     EquipmentType equipmentType;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "providerId", referencedColumnName = "providerId")
+    Provider provider;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "equipmentValueId", referencedColumnName = "equipmentValueId")
+    EquipmentValue equipmentValue;
+
+
 
 }

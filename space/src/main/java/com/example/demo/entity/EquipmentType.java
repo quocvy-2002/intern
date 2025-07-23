@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Builder
 @NoArgsConstructor
@@ -20,5 +22,8 @@ public class EquipmentType {
 
     @Column(name = "equipmentTypeName")
     String equipmentTypeName;
+
+    @OneToMany(mappedBy = "equipmentType", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<EquipmentStatus> equipmentStatus;
 
 }
