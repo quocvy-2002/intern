@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,36 +73,56 @@ public class EquipmentService {
         if (currentPowerKW == null || currentPowerKW.compareTo(BigDecimal.ZERO) < 0) {
             throw new AppException(ErrorCode.INVALID_POWER_CONSUMPTION);
         }
+
         if (status == null) {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
+
         Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
+
+
+        Optional<EquipmentStatusLog> lastLogOpt = equipmentStatusLogRepository
+                .findTopByEquipmentOrderByTimestampDesc(equipment);
+
+        if (lastLogOpt.isPresent()) {
+            Status currentStatus = lastLogOpt.get().getStatus();
+            if (currentStatus == status) {
+                throw new AppException(ErrorCode.EQUIPMENT_ALREADY_IN_THIS_STATUS);
+            }
+        }
+
         LocalDateTime now = LocalDateTime.now();
+
+
         EquipmentStatusLog log = new EquipmentStatusLog();
         log.setEquipment(equipment);
         log.setTimestamp(now);
         log.setStatus(status);
         log.setPowerConsumptionKW(currentPowerKW);
         equipmentStatusLogRepository.save(log);
-        EquipmentStatusLog latestLog = equipmentStatusLogRepository
-                .findTopByEquipmentOrderByTimestampDesc(equipment)
-                .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
+
         if (status == Status.ON) {
-            if (latestLog == null || latestLog.getStatus() != Status.ON) {
+            boolean hasOpenHistory = equipmentUsageHistoryRepository
+                    .existsByEquipmentAndEndTimeIsNull(equipment);
+
+            if (!hasOpenHistory) {
                 EquipmentUsageHistory history = new EquipmentUsageHistory();
                 history.setEquipment(equipment);
                 history.setStartTime(now);
                 equipmentUsageHistoryRepository.save(history);
             }
+
         } else if (status == Status.OFF) {
             EquipmentUsageHistory latestHistory = equipmentUsageHistoryRepository
                     .findTopByEquipmentAndEndTimeIsNullOrderByStartTimeDesc(equipment)
-                    .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
+                    .orElse(null);
             if (latestHistory != null) {
                 latestHistory.setEndTime(now);
                 equipmentUsageHistoryRepository.save(latestHistory);
             }
         }
     }
+
+
 }

@@ -36,7 +36,7 @@ public class EquipmentController {
                 .build();
     }
 
-    @GetMapping("/{equipmentId}")
+    @GetMapping("/by-id/{equipmentId}")
     ApiResponse<EquipmentResponse> getEquipment(@PathVariable Integer equipmentId) {
         return ApiResponse.<EquipmentResponse>builder()
                 .result(equipmentService.getEquipmentById(equipmentId))
@@ -57,7 +57,7 @@ public class EquipmentController {
         equipmentService.deleteEquipment(equipmentId);
     }
 
-    @GetMapping("/{spaceId}")
+    @GetMapping("/by-space/{spaceId}")
     ApiResponse<List<EquipmentResponse>> getAllEquipment(@PathVariable Integer spaceId) {
         return ApiResponse.<List<EquipmentResponse>>builder()
                 .result(equipmentService.getEquipmentsBySpaceId(spaceId))

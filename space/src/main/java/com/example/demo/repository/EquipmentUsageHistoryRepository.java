@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface EquipmentUsageHistoryRepository extends JpaRepository<EquipmentUsageHistory, Integer> {
     Optional<EquipmentUsageHistory> findTopByEquipmentAndEndTimeIsNullOrderByStartTimeDesc(Equipment equipment);
+    boolean existsByEquipmentAndEndTimeIsNull(Equipment equipment);
 }
