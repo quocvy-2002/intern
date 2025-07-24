@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.CreateEquipmentStatusRequest;
+import com.example.demo.dto.request.StatusRequest;
 import com.example.demo.dto.request.UpdateEquipmentStatusRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.EquipmentStatusResponse;
@@ -24,6 +25,14 @@ public class EquipmentStatusController {
     public ApiResponse<EquipmentStatusResponse> create(@RequestBody CreateEquipmentStatusRequest request) {
         return ApiResponse.<EquipmentStatusResponse>builder()
                 .result(equipmentStatusService.createEquipmentStatus(request))
+                .build();
+    }
+
+    @PostMapping("/update-status-history")
+    public ApiResponse<String> updateStatusHistory(@RequestBody StatusRequest request) {
+        equipmentStatusService.updateStatusHistory(request);
+        return ApiResponse.<String>builder()
+                .result("Device status updated successfully")
                 .build();
     }
 

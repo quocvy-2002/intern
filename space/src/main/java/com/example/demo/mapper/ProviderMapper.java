@@ -11,5 +11,5 @@ import org.mapstruct.MappingTarget;
 public interface ProviderMapper {
     Provider toProvider(CreateProviderRequest request);
     ProviderResponse toProviderResponse(Provider provider);
-    void updateProvider(@MappingTarget Integer providerId , UpdateProviderRequest request);
+    void updateProvider(@MappingTarget Provider provider , UpdateProviderRequest request);
 }

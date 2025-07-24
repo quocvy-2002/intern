@@ -19,7 +19,10 @@ public enum ErrorCode {
     EQUIPMENT_STATUS_EXISTED(1003, "Equipment Status has existed", HttpStatus.NOT_FOUND),
     INVALID_POWER_CONSUMPTION(1004, "Invalid power consumption value", HttpStatus.BAD_REQUEST),
     PROVIDER_ALREADY_EXISTS(1002, "Provider has existed", HttpStatus.CONFLICT),
+    EQUIPMENT_TYPE_EXISTS(1002, "Equipment Type has existed", HttpStatus.CONFLICT),
+    EQUIPMENT_TYPE_NOT_EXISTS(1002, "Equipment Type  not existed", HttpStatus.CONFLICT),
     EQUIPMENT_VALUE_ALREADY_EXISTS(1002, "Equipment Value has existed", HttpStatus.CONFLICT),
+    NO_ACTIVE_USAGE_HISTORY(1004, "No active usage history found", HttpStatus.NOT_FOUND),
     INVALID_STATUS(1005, "Invalid status value", HttpStatus.BAD_REQUEST);
 
     ;

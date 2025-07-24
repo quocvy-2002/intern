@@ -30,9 +30,10 @@ public class EquipmentStatusLog {
     @Column(name = "timestamp")
     LocalDateTime timestamp;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    Status status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status")
+    @JsonIgnore
+    EquipmentStatus equipmentStatus;
 
     @Column(name = "powerConsumptionKW")
     BigDecimal powerConsumptionKW;

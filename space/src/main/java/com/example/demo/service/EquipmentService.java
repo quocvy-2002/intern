@@ -3,18 +3,12 @@ package com.example.demo.service;
 import com.example.demo.dto.request.CreateEquipmentRequest;
 import com.example.demo.dto.request.UpdateEquipmentRequest;
 import com.example.demo.dto.response.EquipmentResponse;
-import com.example.demo.entity.Equipment;
-import com.example.demo.entity.EquipmentStatusLog;
-import com.example.demo.entity.EquipmentUsageHistory;
-import com.example.demo.entity.Space;
+import com.example.demo.entity.*;
 import com.example.demo.enums.Status;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.EquipmentMapper;
-import com.example.demo.repository.EquipmentRepository;
-import com.example.demo.repository.EquipmentStatusLogRepository;
-import com.example.demo.repository.EquipmentUsageHistoryRepository;
-import com.example.demo.repository.SpaceRepository;
+import com.example.demo.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,6 +30,7 @@ public class EquipmentService {
     SpaceRepository spaceRepository;
     EquipmentUsageHistoryRepository equipmentUsageHistoryRepository;
     EquipmentStatusLogRepository equipmentStatusLogRepository;
+    EquipmentStatusRepository equipmentStatusRepository;
 
     public EquipmentResponse createEquipment(CreateEquipmentRequest createEquipmentRequest) {
         Equipment equipment = equipmentMapper.toEquipment(createEquipmentRequest);
@@ -81,25 +76,35 @@ public class EquipmentService {
         Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
 
+        // Fetch EquipmentType from Equipment (assuming Equipment has a reference to EquipmentType)
+        EquipmentType equipmentType = equipment.getEquipmentType();
+        if (equipmentType == null) {
+            throw new AppException(ErrorCode.EQUIPMENT_TYPE_NOT_EXISTS);
+        }
+
+        // Map Status enum to EquipmentStatus entity
+        EquipmentStatus equipmentStatus = equipmentStatusRepository
+                .findByStatusNameAndEquipmentType(status.name(), equipmentType)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_STATUS));
 
         Optional<EquipmentStatusLog> lastLogOpt = equipmentStatusLogRepository
                 .findTopByEquipmentOrderByTimestampDesc(equipment);
 
         if (lastLogOpt.isPresent()) {
-            Status currentStatus = lastLogOpt.get().getStatus();
-            if (currentStatus == status) {
+            EquipmentStatus currentStatus = lastLogOpt.get().getEquipmentStatus();
+            if (currentStatus.getStatusName().equalsIgnoreCase(status.name())) {
                 throw new AppException(ErrorCode.EQUIPMENT_ALREADY_IN_THIS_STATUS);
             }
         }
 
         LocalDateTime now = LocalDateTime.now();
 
-
-        EquipmentStatusLog log = new EquipmentStatusLog();
-        log.setEquipment(equipment);
-        log.setTimestamp(now);
-        log.setStatus(status);
-        log.setPowerConsumptionKW(currentPowerKW);
+        EquipmentStatusLog log = EquipmentStatusLog.builder()
+                .equipment(equipment)
+                .timestamp(now)
+                .equipmentStatus(equipmentStatus)
+                .powerConsumptionKW(currentPowerKW)
+                .build();
         equipmentStatusLogRepository.save(log);
 
         if (status == Status.ON) {
@@ -107,12 +112,12 @@ public class EquipmentService {
                     .existsByEquipmentAndEndTimeIsNull(equipment);
 
             if (!hasOpenHistory) {
-                EquipmentUsageHistory history = new EquipmentUsageHistory();
-                history.setEquipment(equipment);
-                history.setStartTime(now);
+                EquipmentUsageHistory history = EquipmentUsageHistory.builder()
+                        .equipment(equipment)
+                        .startTime(now)
+                        .build();
                 equipmentUsageHistoryRepository.save(history);
             }
-
         } else if (status == Status.OFF) {
             EquipmentUsageHistory latestHistory = equipmentUsageHistoryRepository
                     .findTopByEquipmentAndEndTimeIsNullOrderByStartTimeDesc(equipment)

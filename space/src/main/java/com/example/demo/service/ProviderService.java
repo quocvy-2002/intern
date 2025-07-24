@@ -34,7 +34,7 @@ public class ProviderService {
     public ProviderResponse updateProvider(Integer providerId ,UpdateProviderRequest request) {
         Provider provider = providerRepository.findByProviderId(providerId)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
-        providerMapper.updateProvider(providerId, request);
+        providerMapper.updateProvider(provider, request);
         providerRepository.save(provider);
         return providerMapper.toProviderResponse(provider);
     }

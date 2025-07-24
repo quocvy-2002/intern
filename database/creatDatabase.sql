@@ -103,4 +103,14 @@ FOREIGN KEY (equipmentTypeId)
 REFERENCES equipment_type(equipmentTypeId)
 ON DELETE CASCADE;
 
+ALTER TABLE equipment_status_log
+DROP COLUMN status;
+
+ALTER TABLE equipment_status_log
+ADD COLUMN status INT;
+
+ALTER TABLE equipment_status_log
+ADD CONSTRAINT fk_status_log_status
+FOREIGN KEY (status) REFERENCES equipment_status(statusId)
+ON DELETE CASCADE;
 
