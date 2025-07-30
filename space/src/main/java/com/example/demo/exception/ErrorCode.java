@@ -21,6 +21,7 @@ public enum ErrorCode {
     PROVIDER_ALREADY_EXISTS(1002, "Provider has existed", HttpStatus.CONFLICT),
     EQUIPMENT_TYPE_EXISTS(1002, "Equipment Type has existed", HttpStatus.CONFLICT),
     EQUIPMENT_TYPE_NOT_EXISTS(1002, "Equipment Type  not existed", HttpStatus.CONFLICT),
+    DEVIC_ID_NOT_NULL(1002, "Device ID cannot be empty or null", HttpStatus.CONFLICT),
     EQUIPMENT_VALUE_ALREADY_EXISTS(1002, "Equipment Value has existed", HttpStatus.CONFLICT),
     NO_ACTIVE_USAGE_HISTORY(1004, "No active usage history found", HttpStatus.NOT_FOUND),
     INVALID_STATUS(1005, "Invalid status value", HttpStatus.BAD_REQUEST);

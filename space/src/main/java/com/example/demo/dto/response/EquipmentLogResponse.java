@@ -1,16 +1,17 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.response;
 
-import com.example.demo.entity.Space;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateEquipmentRequest {
+public class EquipmentLogResponse {
     String equipmentName;
-    Space space;
-    Integer equipmentTypeId;
+    LocalDateTime timestamp;
+    String statusName;
 }

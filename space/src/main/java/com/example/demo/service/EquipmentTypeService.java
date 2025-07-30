@@ -23,11 +23,14 @@ public class EquipmentTypeService {
     EquipmentTypeRepository equipmentTypeRepository;
     EquipmentTypeMapper equipmentTypeMapper;
 
-    public EquipmentTypeResponse createEquipmentType(CreateEquipmentTypeRequest request){
-        EquipmentType equipmentType = equipmentTypeRepository.findByEquipmentTypeName(request.getEquipmentTypeName())
-                .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_TYPE_EXISTS));
-        return equipmentTypeMapper.toEquipmentTypeResponse(equipmentTypeRepository.save(equipmentType));
+    public EquipmentTypeResponse createEquipmentType(CreateEquipmentTypeRequest request) {
+        if (equipmentTypeRepository.findByEquipmentTypeName(request.getEquipmentTypeName()).isPresent()) {
+            throw new AppException(ErrorCode.EQUIPMENT_TYPE_EXISTS);
+        }
+        EquipmentType saved = equipmentTypeRepository.save(equipmentTypeMapper.toEquipmentType(request));
+        return equipmentTypeMapper.toEquipmentTypeResponse(saved);
     }
+
 
     public EquipmentTypeResponse getEquipmentById(Integer equipmentTypeId){
         EquipmentType equipmentType = equipmentTypeRepository.findByEquipmentTypeId(equipmentTypeId)

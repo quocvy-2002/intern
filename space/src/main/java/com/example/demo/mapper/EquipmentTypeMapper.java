@@ -5,12 +5,16 @@ import com.example.demo.dto.request.UpdateEquipmentTypeRequest;
 import com.example.demo.dto.response.EquipmentTypeResponse;
 import com.example.demo.entity.EquipmentType;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface EquipmentTypeMapper {
+    @Mapping(target = "equipmentTypeName", source = "equipmentTypeName")
     EquipmentType toEquipmentType(CreateEquipmentTypeRequest request);
-    EquipmentTypeResponse toEquipmentTypeResponse(EquipmentType equipmentType);
-    void updateEquipmentType(@MappingTarget EquipmentType equipmentType, UpdateEquipmentTypeRequest request);
 
+    EquipmentTypeResponse toEquipmentTypeResponse(EquipmentType equipmentType);
+
+    @Mapping(target = "equipmentTypeName", source = "equipmentTypeName")
+    void updateEquipmentType(@MappingTarget EquipmentType equipmentType, UpdateEquipmentTypeRequest request);
 }

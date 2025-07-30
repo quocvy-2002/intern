@@ -34,6 +34,7 @@ public class SpaceTypeService {
         SpaceType existing = spaceTypeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
 
+
         spaceTypeMapper.updateSpaceType(existing, request);
         return spaceTypeMapper.toSpaceTypeResponse(spaceTypeRepository.save(existing));
     }

@@ -5,11 +5,18 @@ import com.example.demo.dto.request.UpdateEquipmentRequest;
 import com.example.demo.dto.response.EquipmentResponse;
 import com.example.demo.entity.Equipment;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
+
 public interface EquipmentMapper {
+    @Mapping(target = "equipmentType", ignore = true)
     Equipment toEquipment(CreateEquipmentRequest request);
+
     EquipmentResponse toEquipmentResponse(Equipment equipment);
-    void updateEquipment(@MappingTarget Equipment equipment , UpdateEquipmentRequest request);
+
+    @Mapping(target = "equipmentName", source = "equipmentName")
+    @Mapping(target = "space", source = "space")
+    void updateEquipment(@MappingTarget Equipment equipment, UpdateEquipmentRequest request);
 }

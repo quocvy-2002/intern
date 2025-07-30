@@ -1,16 +1,14 @@
 package com.example.demo.dto.request;
 
-import com.example.demo.entity.Space;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateEquipmentRequest {
-    String equipmentName;
-    Space space;
-    Integer equipmentTypeId;
+public class TuyaAuthRequest {
+    String clientId;
+    String clientSecret;
 }

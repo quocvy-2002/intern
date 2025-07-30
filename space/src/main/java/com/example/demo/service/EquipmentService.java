@@ -31,12 +31,19 @@ public class EquipmentService {
     EquipmentUsageHistoryRepository equipmentUsageHistoryRepository;
     EquipmentStatusLogRepository equipmentStatusLogRepository;
     EquipmentStatusRepository equipmentStatusRepository;
-
+    EquipmentTypeRepository equipmentTypeRepository;
     public EquipmentResponse createEquipment(CreateEquipmentRequest createEquipmentRequest) {
         Equipment equipment = equipmentMapper.toEquipment(createEquipmentRequest);
+
+        EquipmentType equipmentType = equipmentTypeRepository.findById(createEquipmentRequest.getEquipmentTypeId())
+                .orElseThrow(() -> new RuntimeException("EquipmentType not found"));
+
+        equipment.setEquipmentType(equipmentType);
+
         equipmentRepository.save(equipment);
         return equipmentMapper.toEquipmentResponse(equipment);
     }
+
     public List<EquipmentResponse> getAllEquipments() {
         List<Equipment> equipments = equipmentRepository.findAll();
         return equipments.stream().map(equipmentMapper::toEquipmentResponse).collect(Collectors.toList());

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.request.CreateEquipmentStatusRequest;
 import com.example.demo.dto.request.StatusRequest;
 import com.example.demo.dto.request.UpdateEquipmentStatusRequest;
+import com.example.demo.dto.response.EquipmentLogResponse;
 import com.example.demo.dto.response.EquipmentStatusResponse;
 import com.example.demo.entity.*;
 import com.example.demo.enums.Status;
@@ -145,5 +146,9 @@ public class EquipmentStatusService {
                 }
             }
         }
+
+    public List<EquipmentLogResponse> getAllLogs() {
+        return equipmentStatusLogRepository.findAllLogs();
+    }
 
 }
