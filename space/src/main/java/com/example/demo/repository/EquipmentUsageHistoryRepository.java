@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.Equipment;
-import com.example.demo.entity.EquipmentUsageHistory;
+import com.example.demo.model.entity.Equipment;
+import com.example.demo.model.entity.EquipmentUsageHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.CreateEquipmentTypeRequest;
-import com.example.demo.dto.request.UpdateEquipmentTypeRequest;
-import com.example.demo.dto.response.EquipmentTypeResponse;
-import com.example.demo.entity.EquipmentType;
+import com.example.demo.model.dto.equipmenttype.ETypeCreateDTO;
+import com.example.demo.model.dto.equipmenttype.ETypeDTO;
+import com.example.demo.model.dto.equipmenttype.ETypeUpdateDTO;
+import com.example.demo.model.entity.EquipmentType;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.EquipmentTypeMapper;
@@ -23,7 +23,7 @@ public class EquipmentTypeService {
     EquipmentTypeRepository equipmentTypeRepository;
     EquipmentTypeMapper equipmentTypeMapper;
 
-    public EquipmentTypeResponse createEquipmentType(CreateEquipmentTypeRequest request) {
+    public ETypeDTO createEquipmentType(ETypeCreateDTO request) {
         if (equipmentTypeRepository.findByEquipmentTypeName(request.getEquipmentTypeName()).isPresent()) {
             throw new AppException(ErrorCode.EQUIPMENT_TYPE_EXISTS);
         }
@@ -32,18 +32,18 @@ public class EquipmentTypeService {
     }
 
 
-    public EquipmentTypeResponse getEquipmentById(Integer equipmentTypeId){
+    public ETypeDTO getEquipmentById(Integer equipmentTypeId){
         EquipmentType equipmentType = equipmentTypeRepository.findByEquipmentTypeId(equipmentTypeId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_TYPE_EXISTS));
         return equipmentTypeMapper.toEquipmentTypeResponse(equipmentType);
     }
 
-    public List<EquipmentTypeResponse> getAllEquipmentTypes(){
+    public List<ETypeDTO> getAllEquipmentTypes(){
         List<EquipmentType> equipmentTypes = equipmentTypeRepository.findAll();
         return equipmentTypes.stream().map(equipmentTypeMapper::toEquipmentTypeResponse).collect(Collectors.toList());
     }
 
-    public EquipmentTypeResponse updateEquipmentType(Integer equipmentTypeId, UpdateEquipmentTypeRequest request){
+    public ETypeDTO updateEquipmentType(Integer equipmentTypeId, ETypeUpdateDTO request){
         EquipmentType equipmentType = equipmentTypeRepository.findByEquipmentTypeId(equipmentTypeId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_TYPE_EXISTS));
        equipmentTypeMapper.updateEquipmentType(equipmentType,request);

@@ -1,12 +1,19 @@
 package com.example.demo.exception;
 
 
-import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.model.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -43,5 +50,24 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(errorCode.getMessage());
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<Map<String, Object>> errors = new ArrayList<>();
+
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            Map<String, Object> errorDetail = new HashMap<>();
+
+            String codeName = error.getDefaultMessage();
+            ErrorCode errorCode = ErrorCode.fromCode(codeName);
+
+            errorDetail.put("code", errorCode.getCode());
+            errorDetail.put("message", error.getField() + " " + errorCode.getMessage());
+
+            errors.add(errorDetail);
+        }
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

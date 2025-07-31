@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.CreatSpaceRequest;
-import com.example.demo.dto.request.UpdateSpaceRequest;
-import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.SpaceResponse;
+import com.example.demo.model.dto.response.ApiResponse;
+import com.example.demo.model.dto.space.SpaceCreateDTO;
+import com.example.demo.model.dto.space.SpaceDTO;
+import com.example.demo.model.dto.space.SpaceUpdateDTO;
 import com.example.demo.service.SpaceService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -21,21 +21,22 @@ public class SpaceController {
     SpaceService spaceService;
 
     @PostMapping
-    ApiResponse<SpaceResponse> createSpace(@Valid @RequestBody CreatSpaceRequest request) {
-        return ApiResponse.<SpaceResponse>builder()
+    ApiResponse<SpaceDTO> createSpace(@Valid @RequestBody SpaceCreateDTO request) {
+        return ApiResponse.<SpaceDTO>builder()
                 .result(spaceService.creatSpace(request))
                 .build();
     }
+
     @GetMapping("/{spaceId}")
-    public ApiResponse<SpaceResponse> getSpace(@PathVariable Integer spaceId) {
-        return ApiResponse.<SpaceResponse>builder()
+    public ApiResponse<SpaceDTO> getSpace(@PathVariable Integer spaceId) {
+        return ApiResponse.<SpaceDTO>builder()
                 .result(spaceService.getSpcae(spaceId))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<SpaceResponse>> getAllSpaces() {
-        return ApiResponse.<List<SpaceResponse>>builder()
+    public ApiResponse<List<SpaceDTO>> getAllSpaces() {
+        return ApiResponse.<List<SpaceDTO>>builder()
                 .result(spaceService.getAllSpaces())
                 .build();
     }
@@ -47,11 +48,11 @@ public class SpaceController {
 
 
     @PutMapping("/{spaceId}")
-    public ApiResponse<SpaceResponse> updateSpace(
+    public ApiResponse<SpaceDTO> updateSpace(
             @PathVariable Integer spaceId,
-            @Valid @RequestBody UpdateSpaceRequest request
+            @Valid @RequestBody SpaceUpdateDTO request
     ) {
-        return ApiResponse.<SpaceResponse>builder()
+        return ApiResponse.<SpaceDTO>builder()
                 .result(spaceService.updateSpace(spaceId, request))
                 .build();
     }

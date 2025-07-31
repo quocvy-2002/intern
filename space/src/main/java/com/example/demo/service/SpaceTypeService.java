@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
 
-import com.example.demo.dto.request.CreatSpaceTypeRequest;
-import com.example.demo.dto.request.UpdateSpaceTypeRequest;
-import com.example.demo.dto.response.SpaceTypeResponse;
-import com.example.demo.entity.SpaceType;
+import com.example.demo.model.dto.spacetype.SpaceTypeCreateDTO;
+import com.example.demo.model.dto.spacetype.SpaceTypeDTO;
+import com.example.demo.model.dto.spacetype.SpaceTypeUpdateDTO;
+import com.example.demo.model.entity.SpaceType;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.SpaceTypeMapper;
@@ -25,18 +25,18 @@ public class SpaceTypeService {
     SpaceTypeRepository spaceTypeRepository;
     SpaceTypeMapper spaceTypeMapper;
 
-    public SpaceTypeResponse createSpaceType(CreatSpaceTypeRequest request) {
+    public SpaceTypeDTO createSpaceType(SpaceTypeCreateDTO request) {
         SpaceType spaceType = spaceTypeMapper.toSpaceType(request);
-        return spaceTypeMapper.toSpaceTypeResponse(spaceTypeRepository.save(spaceType));
+        return spaceTypeMapper.toSpaceTypeDTO(spaceTypeRepository.save(spaceType));
     }
 
-    public SpaceTypeResponse updateSpaceType(Integer id, UpdateSpaceTypeRequest request) {
+    public SpaceTypeDTO updateSpaceType(Integer id, SpaceTypeUpdateDTO request) {
         SpaceType existing = spaceTypeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
 
 
         spaceTypeMapper.updateSpaceType(existing, request);
-        return spaceTypeMapper.toSpaceTypeResponse(spaceTypeRepository.save(existing));
+        return spaceTypeMapper.toSpaceTypeDTO(spaceTypeRepository.save(existing));
     }
 
     public void deleteSpaceType(Integer id) {
@@ -45,16 +45,16 @@ public class SpaceTypeService {
         spaceTypeRepository.delete(spaceType);
     }
 
-    public List<SpaceTypeResponse> getAllSpaceTypes() {
+    public List<SpaceTypeDTO> getAllSpaceTypes() {
         return spaceTypeRepository.findAll()
                 .stream()
-                .map(spaceTypeMapper::toSpaceTypeResponse)
+                .map(spaceTypeMapper::toSpaceTypeDTO)
                 .collect(Collectors.toList());
     }
 
-    public SpaceTypeResponse getSpaceType(Integer id) {
+    public SpaceTypeDTO getSpaceType(Integer id) {
         SpaceType spaceType = spaceTypeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
-        return spaceTypeMapper.toSpaceTypeResponse(spaceType);
+        return spaceTypeMapper.toSpaceTypeDTO(spaceType);
     }
 }

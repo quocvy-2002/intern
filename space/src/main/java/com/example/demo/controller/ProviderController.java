@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.CreateProviderRequest;
-import com.example.demo.dto.request.UpdateProviderRequest;
-import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.ProviderResponse;
+import com.example.demo.model.dto.provider.ProviderCreateDTO;
+import com.example.demo.model.dto.provider.ProviderUpdateDTO;
+import com.example.demo.model.dto.response.ApiResponse;
+import com.example.demo.model.dto.provider.ProviderDTO;
 import com.example.demo.service.ProviderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +21,16 @@ public class ProviderController {
     ProviderService providerService;
 
     @PostMapping
-    public ApiResponse<ProviderResponse> create(@RequestBody CreateProviderRequest request) {
-        return ApiResponse.<ProviderResponse>builder()
+    public ApiResponse<ProviderDTO> create(@RequestBody ProviderCreateDTO request) {
+        return ApiResponse.<ProviderDTO>builder()
                 .result(providerService.createProvider(request))
                 .build();
     }
 
     @PutMapping("/{providerId}")
-    public ApiResponse<ProviderResponse> update(@PathVariable Integer providerId,
-                                                @RequestBody UpdateProviderRequest request) {
-        return ApiResponse.<ProviderResponse>builder()
+    public ApiResponse<ProviderDTO> update(@PathVariable Integer providerId,
+                                           @RequestBody ProviderUpdateDTO request) {
+        return ApiResponse.<ProviderDTO>builder()
                 .result(providerService.updateProvider(providerId, request))
                 .build();
     }
@@ -41,15 +41,15 @@ public class ProviderController {
     }
 
     @GetMapping("/{providerId}")
-    public ApiResponse<ProviderResponse> getById(@PathVariable Integer providerId) {
-        return ApiResponse.<ProviderResponse>builder()
+    public ApiResponse<ProviderDTO> getById(@PathVariable Integer providerId) {
+        return ApiResponse.<ProviderDTO>builder()
                 .result(providerService.getProvider(providerId))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<ProviderResponse>> getAll() {
-        return ApiResponse.<List<ProviderResponse>>builder()
+    public ApiResponse<List<ProviderDTO>> getAll() {
+        return ApiResponse.<List<ProviderDTO>>builder()
                 .result(providerService.getProviders())
                 .build();
     }

@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.CreateEquipmentTypeRequest;
-import com.example.demo.dto.request.UpdateEquipmentTypeRequest;
-import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.EquipmentTypeResponse;
+import com.example.demo.model.dto.equipmenttype.ETypeCreateDTO;
+import com.example.demo.model.dto.equipmenttype.ETypeDTO;
+import com.example.demo.model.dto.equipmenttype.ETypeUpdateDTO;
+import com.example.demo.model.dto.response.ApiResponse;
 import com.example.demo.service.EquipmentTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,30 +19,30 @@ public class EquipmentTypeController {
     EquipmentTypeService equipmentTypeService;
 
     @PostMapping
-    public ApiResponse<EquipmentTypeResponse> createEquipmentType(@Valid @RequestBody CreateEquipmentTypeRequest request) {
-        return ApiResponse.<EquipmentTypeResponse>builder()
+    public ApiResponse<ETypeDTO> createEquipmentType(@Valid @RequestBody ETypeCreateDTO request) {
+        return ApiResponse.<ETypeDTO>builder()
                 .result(equipmentTypeService.createEquipmentType(request))
                 .build();
     }
 
     @GetMapping("/{equipmentTypeId}")
-    public ApiResponse<EquipmentTypeResponse> getEquipmentTypeById(@PathVariable Integer id) {
-        return ApiResponse.<EquipmentTypeResponse>builder()
+    public ApiResponse<ETypeDTO> getEquipmentTypeById(@PathVariable Integer id) {
+        return ApiResponse.<ETypeDTO>builder()
                 .result(equipmentTypeService.getEquipmentById(id))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<EquipmentTypeResponse>> getAllEquipmentTypes() {
-        return ApiResponse.<List<EquipmentTypeResponse>>builder()
+    public ApiResponse<List<ETypeDTO>> getAllEquipmentTypes() {
+        return ApiResponse.<List<ETypeDTO>>builder()
                 .result(equipmentTypeService.getAllEquipmentTypes())
                 .build();
     }
 
     @PutMapping("/{equipmentTypeId}")
-    public ApiResponse<EquipmentTypeResponse> updateEquipmentType(@PathVariable Integer id,
-                                                                  @Valid @RequestBody UpdateEquipmentTypeRequest request) {
-        return ApiResponse.<EquipmentTypeResponse>builder()
+    public ApiResponse<ETypeDTO> updateEquipmentType(@PathVariable Integer id,
+                                                                  @Valid @RequestBody ETypeUpdateDTO request) {
+        return ApiResponse.<ETypeDTO>builder()
                 .result(equipmentTypeService.updateEquipmentType(id, request))
                 .build();
     }

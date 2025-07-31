@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.response.*;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
+import com.example.demo.model.dto.response.DeviceStateResponse;
+import com.example.demo.model.dto.response.DeviceStatusEntry;
+import com.example.demo.model.dto.response.OperationLogResponse;
+import com.example.demo.model.dto.response.ReportLogResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +38,6 @@ public class DeviceService {
                 String contentSha256 = tuyaAuthenticationService.getSHA256(body != null ? body : "");
                 String optionalSignatureKey = "";
 
-                // Tách urlPath thành path và query
                 String path = urlPath;
                 String query = "";
                 int queryIndex = urlPath.indexOf("?");

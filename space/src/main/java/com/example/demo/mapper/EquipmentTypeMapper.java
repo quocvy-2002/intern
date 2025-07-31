@@ -1,9 +1,9 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.request.CreateEquipmentTypeRequest;
-import com.example.demo.dto.request.UpdateEquipmentTypeRequest;
-import com.example.demo.dto.response.EquipmentTypeResponse;
-import com.example.demo.entity.EquipmentType;
+import com.example.demo.model.dto.equipmenttype.ETypeCreateDTO;
+import com.example.demo.model.dto.equipmenttype.ETypeDTO;
+import com.example.demo.model.dto.equipmenttype.ETypeUpdateDTO;
+import com.example.demo.model.entity.EquipmentType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -11,10 +11,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface EquipmentTypeMapper {
     @Mapping(target = "equipmentTypeName", source = "equipmentTypeName")
-    EquipmentType toEquipmentType(CreateEquipmentTypeRequest request);
+    EquipmentType toEquipmentType(ETypeCreateDTO request);
 
-    EquipmentTypeResponse toEquipmentTypeResponse(EquipmentType equipmentType);
+    ETypeDTO toEquipmentTypeResponse(EquipmentType equipmentType);
 
     @Mapping(target = "equipmentTypeName", source = "equipmentTypeName")
-    void updateEquipmentType(@MappingTarget EquipmentType equipmentType, UpdateEquipmentTypeRequest request);
+    void updateEquipmentType(@MappingTarget EquipmentType equipmentType, ETypeUpdateDTO request);
 }

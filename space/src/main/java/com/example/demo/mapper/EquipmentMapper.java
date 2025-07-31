@@ -1,9 +1,11 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.request.CreateEquipmentRequest;
-import com.example.demo.dto.request.UpdateEquipmentRequest;
-import com.example.demo.dto.response.EquipmentResponse;
-import com.example.demo.entity.Equipment;
+import com.example.demo.model.dto.equipment.EquipmentCreateDTO;
+import com.example.demo.model.dto.equipment.EquipmentDTO;
+import com.example.demo.model.dto.equipment.EquipmentUpdateDTO;
+import com.example.demo.model.dto.request.CreateEquipmentRequest;
+import com.example.demo.model.dto.request.UpdateEquipmentRequest;
+import com.example.demo.model.entity.Equipment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -12,11 +14,11 @@ import org.mapstruct.MappingTarget;
 
 public interface EquipmentMapper {
     @Mapping(target = "equipmentType", ignore = true)
-    Equipment toEquipment(CreateEquipmentRequest request);
+    Equipment toEquipment(EquipmentCreateDTO request);
 
-    EquipmentResponse toEquipmentResponse(Equipment equipment);
+    EquipmentDTO toEquipmentResponse(Equipment equipment);
 
     @Mapping(target = "equipmentName", source = "equipmentName")
     @Mapping(target = "space", source = "space")
-    void updateEquipment(@MappingTarget Equipment equipment, UpdateEquipmentRequest request);
+    void updateEquipment(@MappingTarget Equipment equipment, EquipmentUpdateDTO request);
 }

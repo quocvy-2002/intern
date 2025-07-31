@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.CreateProviderRequest;
-import com.example.demo.dto.request.UpdateProviderRequest;
-import com.example.demo.dto.response.ProviderResponse;
-import com.example.demo.entity.Provider;
+import com.example.demo.model.dto.provider.ProviderCreateDTO;
+import com.example.demo.model.dto.provider.ProviderUpdateDTO;
+import com.example.demo.model.dto.provider.ProviderDTO;
+import com.example.demo.model.entity.Provider;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.ProviderMapper;
@@ -23,7 +23,7 @@ public class ProviderService {
     ProviderMapper providerMapper;
     ProviderRepository providerRepository;
 
-    public ProviderResponse createProvider(CreateProviderRequest request) {
+    public ProviderDTO createProvider(ProviderCreateDTO request) {
         Provider provider = providerRepository.findByProviderName(request.getProviderName())
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
         providerMapper.toProvider(request);
@@ -31,7 +31,7 @@ public class ProviderService {
         return providerMapper.toProviderResponse(provider);
     }
 
-    public ProviderResponse updateProvider(Integer providerId ,UpdateProviderRequest request) {
+    public ProviderDTO updateProvider(Integer providerId , ProviderUpdateDTO request) {
         Provider provider = providerRepository.findByProviderId(providerId)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
         providerMapper.updateProvider(provider, request);
@@ -44,13 +44,13 @@ public class ProviderService {
 
     }
 
-    public ProviderResponse getProvider(Integer providerId) {
+    public ProviderDTO getProvider(Integer providerId) {
         Provider provide = providerRepository.findByProviderId(providerId)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
         return providerMapper.toProviderResponse(provide);
     }
 
-    public List<ProviderResponse> getProviders() {
+    public List<ProviderDTO> getProviders() {
         List<Provider> providers = providerRepository.findAll();
         return providers.stream().map(providerMapper::toProviderResponse).collect(Collectors.toList());
     }

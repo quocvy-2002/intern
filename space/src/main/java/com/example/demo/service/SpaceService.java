@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.CreatSpaceRequest;
-import com.example.demo.dto.request.UpdateSpaceRequest;
-import com.example.demo.dto.response.SpaceResponse;
-import com.example.demo.dto.response.SpaceTypeResponse;
-import com.example.demo.entity.Space;
-import com.example.demo.entity.SpaceType;
+import com.example.demo.model.dto.response.SpaceTypeResponse;
+import com.example.demo.model.dto.space.SpaceCreateDTO;
+import com.example.demo.model.dto.space.SpaceDTO;
+import com.example.demo.model.dto.space.SpaceUpdateDTO;
+import com.example.demo.model.entity.Space;
+import com.example.demo.model.entity.SpaceType;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.SpaceMapper;
@@ -28,46 +28,49 @@ public class SpaceService {
     SpaceRepository spaceRepository;
     SpaceTypeRepository spaceTypeRepository;
 
-    public SpaceResponse creatSpace(CreatSpaceRequest request) {
+    public SpaceDTO creatSpace(SpaceCreateDTO request) {
         Space space = spaceMapper.toSpace(request);
-        Integer parentId = request.getParentId();
-        if (parentId != null && parentId != 0) {
-            Space parent = spaceRepository.findBySpaceId(parentId)
+
+        if (request.getParentId() != null && request.getParentId() != 0) {
+            Space parent = spaceRepository.findBySpaceId(request.getParentId())
                     .orElseThrow(() -> new AppException(ErrorCode.SPACE_NOT_FOUND));
             space.setParent(parent);
         }
-        Integer spaceTypeId = request.getSpaceTypeId();
-        SpaceType spaceType = spaceTypeRepository.findById(spaceTypeId)
+
+        SpaceType spaceType = spaceTypeRepository.findById(request.getSpaceTypeId())
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
         space.setSpaceType(spaceType);
 
         spaceRepository.save(space);
-        return spaceMapper.toSpaceResponse(space);
+        return convertToDTOWithChildren(space);
     }
 
-    public List<SpaceResponse> getAllSpaces() {
+    public List<SpaceDTO> getAllSpaces() {
         List<Space> rootSpaces = spaceRepository.findByParentIsNull();
         return rootSpaces.stream()
-                .map(this::convertToResponseWithChildren)
+                .map(this::convertToDTOWithChildren)
                 .collect(Collectors.toList());
     }
 
-    public SpaceResponse getSpcae(Integer spaceId) {
+    public SpaceDTO getSpcae(Integer spaceId) {
         return spaceRepository.findBySpaceId(spaceId)
-                .map(this::convertToResponseWithChildren)
-                .orElseThrow(() -> new RuntimeException("Space not found with id: " + spaceId));
+                .map(this::convertToDTOWithChildren)
+                .orElseThrow(() -> new AppException(ErrorCode.SPACE_NOT_FOUND));
     }
 
-    private SpaceResponse convertToResponseWithChildren(Space space) {
+    private SpaceDTO convertToDTOWithChildren(Space space) {
         List<Space> children = spaceRepository.findAllByParent(space);
-        return SpaceResponse.builder()
+
+        return SpaceDTO.builder()
+                .spaceId(space.getSpaceId())
                 .spaceName(space.getSpaceName())
                 .spaceType(SpaceTypeResponse.builder()
+                        .spaceTypeId(space.getSpaceType().getSpaceTypeId())
                         .spaceTypeName(space.getSpaceType().getSpaceTypeName())
                         .spaceTypeLevel(space.getSpaceType().getSpaceTypeLevel())
                         .build())
                 .children(children.stream()
-                        .map(this::convertToResponseWithChildren)
+                        .map(this::convertToDTOWithChildren)
                         .collect(Collectors.toList()))
                 .build();
     }
@@ -78,11 +81,11 @@ public class SpaceService {
         stack.push(parentId);
 
         while (!stack.isEmpty()) {
-            Integer currentParentId = stack.pop();
-            Space currentSpace = spaceRepository.findById(String.valueOf(currentParentId)).orElse(null);
-            if (currentSpace == null) continue;
+            Integer currentId = stack.pop();
+            Space parent = spaceRepository.findBySpaceId(currentId).orElse(null);
+            if (parent == null) continue;
 
-            List<Space> children = spaceRepository.findAllByParent(currentSpace);
+            List<Space> children = spaceRepository.findAllByParent(parent);
             for (Space child : children) {
                 result.add(child.getSpaceId());
                 stack.push(child.getSpaceId());
@@ -102,29 +105,24 @@ public class SpaceService {
         spaceRepository.deleteAllBySpaceIdIn(allToDelete);
     }
 
-    public SpaceResponse updateSpace(Integer spaceId, UpdateSpaceRequest request) {
+    public SpaceDTO updateSpace(Integer spaceId, SpaceUpdateDTO request) {
         Space space = spaceRepository.findBySpaceId(spaceId)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_NOT_FOUND));
+
         spaceMapper.updateSpace(space, request);
+
         if (request.getParentId() != null) {
             Space parent = spaceRepository.findBySpaceId(request.getParentId())
                     .orElseThrow(() -> new AppException(ErrorCode.SPACE_NOT_FOUND));
             space.setParent(parent);
         }
+
         if (request.getSpaceTypeId() != null) {
             SpaceType spaceType = spaceTypeRepository.findById(request.getSpaceTypeId())
                     .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
             space.setSpaceType(spaceType);
         }
 
-        return SpaceResponse.builder()
-                .spaceName(space.getSpaceName())
-                .spaceType(SpaceTypeResponse.builder()
-                        .spaceTypeName(space.getSpaceType().getSpaceTypeName())
-                        .spaceTypeLevel(space.getSpaceType().getSpaceTypeLevel())
-                        .build())
-                .children(null)
-                .build();
+        return convertToDTOWithChildren(space);
     }
-
 }

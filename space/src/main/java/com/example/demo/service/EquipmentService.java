@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.CreateEquipmentRequest;
-import com.example.demo.dto.request.UpdateEquipmentRequest;
-import com.example.demo.dto.response.EquipmentResponse;
-import com.example.demo.entity.*;
-import com.example.demo.enums.Status;
+import com.example.demo.model.dto.equipment.EquipmentCreateDTO;
+import com.example.demo.model.dto.equipment.EquipmentDTO;
+import com.example.demo.model.dto.equipment.EquipmentUpdateDTO;
+import com.example.demo.model.entity.*;
+import com.example.demo.model.enums.Status;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.EquipmentMapper;
@@ -32,7 +32,7 @@ public class EquipmentService {
     EquipmentStatusLogRepository equipmentStatusLogRepository;
     EquipmentStatusRepository equipmentStatusRepository;
     EquipmentTypeRepository equipmentTypeRepository;
-    public EquipmentResponse createEquipment(CreateEquipmentRequest createEquipmentRequest) {
+    public EquipmentDTO createEquipment(EquipmentCreateDTO createEquipmentRequest) {
         Equipment equipment = equipmentMapper.toEquipment(createEquipmentRequest);
 
         EquipmentType equipmentType = equipmentTypeRepository.findById(createEquipmentRequest.getEquipmentTypeId())
@@ -44,16 +44,16 @@ public class EquipmentService {
         return equipmentMapper.toEquipmentResponse(equipment);
     }
 
-    public List<EquipmentResponse> getAllEquipments() {
+    public List<EquipmentDTO> getAllEquipments() {
         List<Equipment> equipments = equipmentRepository.findAll();
         return equipments.stream().map(equipmentMapper::toEquipmentResponse).collect(Collectors.toList());
     }
-    public EquipmentResponse getEquipmentById(Integer equipmentId) {
+    public EquipmentDTO getEquipmentById(Integer equipmentId) {
         Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
         return equipmentMapper.toEquipmentResponse(equipment);
     }
-    public EquipmentResponse updateEquipment(Integer equipmentId, UpdateEquipmentRequest updateEquipmentRequest) {
+    public EquipmentDTO updateEquipment(Integer equipmentId, EquipmentUpdateDTO updateEquipmentRequest) {
         Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_NOT_FOUND));
         equipmentMapper.updateEquipment(equipment, updateEquipmentRequest);
@@ -62,7 +62,7 @@ public class EquipmentService {
     public void deleteEquipment(Integer equipmentId) {
         equipmentRepository.deleteByEquipmentId(equipmentId);
     }
-    public List<EquipmentResponse> getEquipmentsBySpaceId(Integer spaceId) {
+    public List<EquipmentDTO> getEquipmentsBySpaceId(Integer spaceId) {
         Space space = spaceRepository.findBySpaceId(spaceId)
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_NOT_FOUND));
         List<Equipment> equipments = equipmentRepository.findBySpace_SpaceId(spaceId);

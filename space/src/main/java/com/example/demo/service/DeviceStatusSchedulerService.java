@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.response.DeviceStateResponse;
-import com.example.demo.dto.response.DeviceStatusEntry;
-import com.example.demo.entity.DeviceStatusLog;
+import com.example.demo.model.dto.response.DeviceStateResponse;
+import com.example.demo.model.dto.response.DeviceStatusEntry;
+import com.example.demo.model.entity.DeviceStatusLog;
 import com.example.demo.repository.DeviceStatusLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

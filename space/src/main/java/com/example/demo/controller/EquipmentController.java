@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.CreateEquipmentRequest;
-import com.example.demo.dto.request.UpdateEquipmentRequest;
-import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.EquipmentResponse;
-import com.example.demo.enums.Status;
+import com.example.demo.model.dto.equipment.EquipmentCreateDTO;
+import com.example.demo.model.dto.equipment.EquipmentDTO;
+import com.example.demo.model.dto.equipment.EquipmentUpdateDTO;
+import com.example.demo.model.dto.response.ApiResponse;
+import com.example.demo.model.enums.Status;
 import com.example.demo.service.EquipmentService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -23,31 +23,31 @@ public class EquipmentController {
     EquipmentService equipmentService;
 
     @PostMapping
-    ApiResponse<EquipmentResponse> createEquipment(@Valid @RequestBody CreateEquipmentRequest request){
-        return ApiResponse.<EquipmentResponse>builder()
+    ApiResponse<EquipmentDTO> createEquipment(@Valid @RequestBody EquipmentCreateDTO request){
+        return ApiResponse.<EquipmentDTO>builder()
                 .result(equipmentService.createEquipment(request))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<EquipmentResponse>> createEquipment(){
-        return ApiResponse.<List<EquipmentResponse>>builder()
+    ApiResponse<List<EquipmentDTO>> createEquipment(){
+        return ApiResponse.<List<EquipmentDTO>>builder()
                 .result(equipmentService.getAllEquipments())
                 .build();
     }
 
     @GetMapping("/by-id/{equipmentId}")
-    ApiResponse<EquipmentResponse> getEquipment(@PathVariable Integer equipmentId) {
-        return ApiResponse.<EquipmentResponse>builder()
+    ApiResponse<EquipmentDTO> getEquipment(@PathVariable Integer equipmentId) {
+        return ApiResponse.<EquipmentDTO>builder()
                 .result(equipmentService.getEquipmentById(equipmentId))
                 .build();
     }
 
     @PutMapping("/{equipmentId}")
-    ApiResponse<EquipmentResponse> updateEquipment(
+    ApiResponse<EquipmentDTO> updateEquipment(
             @PathVariable Integer equipmentId,
-            @Valid @RequestBody UpdateEquipmentRequest request){
-        return ApiResponse.<EquipmentResponse>builder()
+            @Valid @RequestBody EquipmentUpdateDTO request){
+        return ApiResponse.<EquipmentDTO>builder()
                 .result(equipmentService.updateEquipment(equipmentId, request))
                 .build();
     }
@@ -58,8 +58,8 @@ public class EquipmentController {
     }
 
     @GetMapping("/by-space/{spaceId}")
-    ApiResponse<List<EquipmentResponse>> getAllEquipment(@PathVariable Integer spaceId) {
-        return ApiResponse.<List<EquipmentResponse>>builder()
+    ApiResponse<List<EquipmentDTO>> getAllEquipment(@PathVariable Integer spaceId) {
+        return ApiResponse.<List<EquipmentDTO>>builder()
                 .result(equipmentService.getEquipmentsBySpaceId(spaceId))
                 .build();
     }

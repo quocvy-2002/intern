@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.DeviceStateResponse;
-import com.example.demo.dto.response.OperationLogResponse;
-import com.example.demo.dto.response.ReportLogResponse;
+import com.example.demo.model.dto.response.ApiResponse;
+import com.example.demo.model.dto.response.DeviceStateResponse;
+import com.example.demo.model.dto.response.OperationLogResponse;
+import com.example.demo.model.dto.response.ReportLogResponse;
 import com.example.demo.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

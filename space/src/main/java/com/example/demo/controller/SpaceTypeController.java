@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.CreatSpaceTypeRequest;
-import com.example.demo.dto.request.UpdateSpaceTypeRequest;
-import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.SpaceTypeResponse;
+import com.example.demo.model.dto.response.ApiResponse;
+import com.example.demo.model.dto.spacetype.SpaceTypeCreateDTO;
+import com.example.demo.model.dto.spacetype.SpaceTypeDTO;
+import com.example.demo.model.dto.spacetype.SpaceTypeUpdateDTO;
 import com.example.demo.service.SpaceTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +19,33 @@ public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;
 
     @PostMapping
-    public ApiResponse<SpaceTypeResponse> createSpaceType(@Valid @RequestBody CreatSpaceTypeRequest request) {
-        return ApiResponse.<SpaceTypeResponse>builder()
+    public ApiResponse<SpaceTypeDTO> createSpaceType(@Valid @RequestBody SpaceTypeCreateDTO request) {
+        return ApiResponse.<SpaceTypeDTO>builder()
                 .result(spaceTypeService.createSpaceType(request))
                 .build();
     }
 
     @GetMapping("/{spaceTypeId}")
-    public ApiResponse<SpaceTypeResponse> getSpaceType(@PathVariable Integer spaceTypeId) {
-        return ApiResponse.<SpaceTypeResponse>builder()
+    public ApiResponse<SpaceTypeDTO> getSpaceType(@PathVariable Integer spaceTypeId) {
+        return ApiResponse.<SpaceTypeDTO>builder()
                 .result(spaceTypeService.getSpaceType(spaceTypeId))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<SpaceTypeResponse>> getAllSpaceTypes() {
-        return ApiResponse.<List<SpaceTypeResponse>>builder()
+    public ApiResponse<List<SpaceTypeDTO>> getAllSpaceTypes() {
+        return ApiResponse.<List<SpaceTypeDTO>>builder()
                 .result(spaceTypeService.getAllSpaceTypes())
                 .build();
     }
 
     @PutMapping("/{spaceTypeId}")
-    public ApiResponse<SpaceTypeResponse> updateSpaceType(
+    public ApiResponse<SpaceTypeDTO> updateSpaceType(
             @PathVariable Integer spaceTypeId,
-            @Valid @RequestBody UpdateSpaceTypeRequest request
+            @Valid @RequestBody
+            SpaceTypeUpdateDTO request
     ) {
-        return ApiResponse.<SpaceTypeResponse>builder()
+        return ApiResponse.<SpaceTypeDTO>builder()
                 .result(spaceTypeService.updateSpaceType(spaceTypeId, request))
                 .build();
     }

@@ -1,15 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.CreateEquipmentStatusRequest;
-import com.example.demo.dto.request.StatusRequest;
-import com.example.demo.dto.request.UpdateEquipmentStatusRequest;
-import com.example.demo.dto.response.EquipmentLogResponse;
-import com.example.demo.dto.response.EquipmentStatusResponse;
-import com.example.demo.entity.*;
-import com.example.demo.enums.Status;
+import com.example.demo.model.dto.status.StatusRequest;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.EquipmentStatusMapper;
+import com.example.demo.model.dto.response.EquipmentLogResponse;
+import com.example.demo.model.dto.status.StatusCreateDTO;
+import com.example.demo.model.dto.status.StatusDTO;
+import com.example.demo.model.dto.status.StatusUpdateDTO;
+import com.example.demo.model.entity.*;
 import com.example.demo.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +32,14 @@ public class EquipmentStatusService {
     EquipmentRepository equipmentRepository;
     EquipmentUsageHistoryRepository equipmentUsageHistoryRepository;
 
-    public EquipmentStatusResponse getEquipmentStatus(Integer statusId) {
+    public StatusDTO getEquipmentStatus(Integer statusId) {
         EquipmentStatus equipmentStatus = equipmentStatusRepository.findByStatusId(statusId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_STATUS_NOT_FOUND));
         equipmentStatusMapper.toEquipmentStatusResponse(equipmentStatus);
         return equipmentStatusMapper.toEquipmentStatusResponse(equipmentStatusRepository.save(equipmentStatus));
     }
 
-    public List<EquipmentStatusResponse> getEquipmentStatusByEquiment(Integer equipmentTypeId) {
+    public List<StatusDTO> getEquipmentStatusByEquiment(Integer equipmentTypeId) {
         List<EquipmentStatus> equipmentStatuses = equipmentStatusRepository.findByEquipmentType_EquipmentTypeId(equipmentTypeId);
 
         if (equipmentStatuses.isEmpty()) {
@@ -53,12 +51,12 @@ public class EquipmentStatusService {
                 .collect(Collectors.toList());
     }
 
-    public List<EquipmentStatusResponse> getAllEquipmentStatuses() {
+    public List<StatusDTO> getAllEquipmentStatuses() {
         List<EquipmentStatus> equipmentStatuses = equipmentStatusRepository.findAll();
         return equipmentStatuses.stream().map(equipmentStatusMapper::toEquipmentStatusResponse).collect(Collectors.toList());
     }
 
-    public EquipmentStatusResponse createEquipmentStatus (CreateEquipmentStatusRequest request) {
+    public StatusDTO createEquipmentStatus (StatusCreateDTO request) {
         List<EquipmentStatus> equipmentStatuses = equipmentStatusRepository.findByEquipmentType_EquipmentTypeId(request.getEquipmentTypeId());
         for (EquipmentStatus equipmentStatus : equipmentStatuses) {
             if(equipmentStatus.getStatusName().equals(request.getStatusName())) {
@@ -69,14 +67,14 @@ public class EquipmentStatusService {
         return equipmentStatusMapper.toEquipmentStatusResponse(equipmentStatusRepository.save(equipmentStatus));
     }
 
-    public EquipmentStatusResponse updateEquipmentStatus(Integer statusId, UpdateEquipmentStatusRequest request) {
+    public StatusDTO updateEquipmentStatus(Integer statusId, StatusUpdateDTO request) {
         EquipmentStatus equipmentStatus = equipmentStatusRepository.findByStatusId(statusId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_STATUS_NOT_FOUND));
         equipmentStatusMapper.updateEquipmentStatus(equipmentStatus, request);
         return equipmentStatusMapper.toEquipmentStatusResponse(equipmentStatusRepository.save(equipmentStatus));
     }
 
-    public EquipmentStatusResponse deleteEquipmentStatus(Integer statusId) {
+    public StatusDTO deleteEquipmentStatus(Integer statusId) {
         EquipmentStatus equipmentStatus = equipmentStatusRepository.findByStatusId(statusId)
                 .orElseThrow(() -> new AppException(ErrorCode.EQUIPMENT_STATUS_NOT_FOUND));
         equipmentStatusRepository.delete(equipmentStatus);

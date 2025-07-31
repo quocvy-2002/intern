@@ -1,9 +1,9 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.request.CreateProviderRequest;
-import com.example.demo.dto.request.UpdateProviderRequest;
-import com.example.demo.dto.response.ProviderResponse;
-import com.example.demo.entity.Provider;
+import com.example.demo.model.dto.provider.ProviderCreateDTO;
+import com.example.demo.model.dto.provider.ProviderUpdateDTO;
+import com.example.demo.model.dto.provider.ProviderDTO;
+import com.example.demo.model.entity.Provider;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -11,10 +11,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ProviderMapper {
     @Mapping(target = "providerName", source = "providerName")
-    Provider toProvider(CreateProviderRequest request);
+    Provider toProvider(ProviderCreateDTO request);
 
-    ProviderResponse toProviderResponse(Provider provider);
+    ProviderDTO toProviderResponse(Provider provider);
 
     @Mapping(target = "providerName", source = "providerName")
-    void updateProvider(@MappingTarget Provider provider, UpdateProviderRequest request);
+    void updateProvider(@MappingTarget Provider provider, ProviderUpdateDTO request);
 }

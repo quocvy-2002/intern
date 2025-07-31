@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.EquipmentStatus;
-import com.example.demo.entity.EquipmentType;
+import com.example.demo.model.entity.EquipmentStatus;
+import com.example.demo.model.entity.EquipmentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
