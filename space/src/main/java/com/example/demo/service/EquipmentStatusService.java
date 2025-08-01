@@ -145,8 +145,6 @@ public class EquipmentStatusService {
             }
         }
 
-    public List<EquipmentLogResponse> getAllLogs() {
-        return equipmentStatusLogRepository.findAllLogs();
-    }
+
 
 }

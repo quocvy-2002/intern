@@ -1,7 +1,8 @@
 package com.example.demo.exception;
 
-
 import com.example.demo.model.dto.response.ApiResponse;
+import com.example.demo.model.dto.response.FieldErrorDTO;
+import com.example.demo.model.dto.response.ValidationErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    // Handler cho Exception chung
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception) {
         log.error("Exception: ", exception);
@@ -26,22 +30,35 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<ApiResponse> handLingMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        String enumkey = e.getFieldError() != null ? e.getFieldError().getDefaultMessage() : "INVALID_KEY";
-        ErrorCode errorCode = ErrorCode.INVALID_KEY;
 
-        try {
-            errorCode = ErrorCode.valueOf(enumkey);
-        } catch (IllegalArgumentException exception) {
-            errorCode = ErrorCode.INVALID_KEY;
-        }
+    // Handler duy nhất cho MethodArgumentNotValidException (VALIDATION ERROR)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<FieldErrorDTO> errorList = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> {
+                    String field = error.getField();
+                    String codeName = error.getDefaultMessage(); // "IS_REQUIRED"
+                    ErrorCode errorCode = ErrorCode.fromCode(codeName); // lấy Enum tương ứng
 
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-        return ResponseEntity.badRequest().body(apiResponse);
+                    return FieldErrorDTO.builder()
+                            .field(field)
+                            .message(field + errorCode.getMessage()) // "spaceName is required"
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        int errorCode = errorList.isEmpty() ? 3000 : ErrorCode.fromCode("IS_REQUIRED").getCode(); // fallback nếu lỗi không tìm thấy
+
+        ValidationErrorResponse response = ValidationErrorResponse.builder()
+                .code(errorCode)
+                .errors(errorList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+
+    // Handler cho AppException
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();
@@ -50,24 +67,4 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(errorCode.getMessage());
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        List<Map<String, Object>> errors = new ArrayList<>();
-
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            Map<String, Object> errorDetail = new HashMap<>();
-
-            String codeName = error.getDefaultMessage();
-            ErrorCode errorCode = ErrorCode.fromCode(codeName);
-
-            errorDetail.put("code", errorCode.getCode());
-            errorDetail.put("message", error.getField() + " " + errorCode.getMessage());
-
-            errors.add(errorDetail);
-        }
-
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
-
-
 }

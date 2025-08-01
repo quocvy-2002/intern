@@ -3,8 +3,6 @@ package com.example.demo.mapper;
 import com.example.demo.model.dto.equipment.EquipmentCreateDTO;
 import com.example.demo.model.dto.equipment.EquipmentDTO;
 import com.example.demo.model.dto.equipment.EquipmentUpdateDTO;
-import com.example.demo.model.dto.request.CreateEquipmentRequest;
-import com.example.demo.model.dto.request.UpdateEquipmentRequest;
 import com.example.demo.model.entity.Equipment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

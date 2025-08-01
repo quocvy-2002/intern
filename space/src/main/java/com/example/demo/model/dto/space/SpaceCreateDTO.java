@@ -2,6 +2,7 @@ package com.example.demo.model.dto.space;
 
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,12 +12,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpaceCreateDTO {
-    @NotBlank(message = "SPACE_IS_REQUIRED")
+    @NotBlank(message = "IS_REQUIRED")
     String spaceName;
 
-    @NotBlank(message = "SPACE_IS_REQUIRED")
+    @NotNull(message = "IS_REQUIRED")
     Integer spaceTypeId;
 
-    @NotBlank(message = "SPACE_IS_REQUIRED")
+    @NotNull(message = "IS_REQUIRED")
     Integer parentId;
 }

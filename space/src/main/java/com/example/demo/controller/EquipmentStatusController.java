@@ -72,10 +72,5 @@ public class EquipmentStatusController {
                 .build();
     }
 
-    @GetMapping("/getLogs")
-    public ApiResponse<List<StatusDTO>> getAllLog() {
-        return ApiResponse.<List<StatusDTO>>builder()
-                .result(equipmentStatusService.getAllLogs())
-                .build();
-    }
+
 }

@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProviderCreateDTO {
-    @NotBlank(message = "PROVIDER_IS_REQUIRED")
+    @NotBlank(message = "IS_REQUIRED")
     String providerName;
 }

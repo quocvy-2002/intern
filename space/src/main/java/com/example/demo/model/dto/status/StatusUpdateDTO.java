@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatusUpdateDTO {
-    @NotBlank(message = "EQUIPMENT_STATUS_IS_REQUIRED")
+    @NotBlank(message = "IS_REQUIRED")
     String statusName;
 }

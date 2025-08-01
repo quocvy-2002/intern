@@ -10,9 +10,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpaceTypeUpdateDTO {
-    @NotBlank(message = "SPACE_TYPE_IS_REQUIRED")
+    @NotBlank(message = "IS_REQUIRED")
     String spaceTypeName;
 
-    @NotBlank(message = "SPACE_TYPE_IS_REQUIRED")
+    @NotBlank(message = "IS_REQUIRED")
     String spaceTypeLevel;
 }

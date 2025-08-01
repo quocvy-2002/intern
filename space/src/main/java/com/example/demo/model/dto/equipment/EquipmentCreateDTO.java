@@ -2,6 +2,7 @@ package com.example.demo.model.dto.equipment;
 
 import com.example.demo.model.entity.Space;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,12 +12,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EquipmentCreateDTO {
-    @NotBlank(message = "EQUIPMENT_IS_REQUIRED")
+    @NotBlank(message = "IS_REQUIRED")
     String equipmentName;
 
-    @NotBlank(message = "EQUIPMENT_IS_REQUIRED")
+    @NotNull(message = "IS_REQUIRED")
     Space space;
 
-    @NotBlank(message = "EQUIPMENT_IS_REQUIRED")
+    @NotNull(message = "IS_REQUIRED")
     Integer equipmentTypeId;
 }

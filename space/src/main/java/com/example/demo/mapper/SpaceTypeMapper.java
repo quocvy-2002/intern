@@ -3,8 +3,6 @@ package com.example.demo.mapper;
 
 
 
-import com.example.demo.model.dto.request.UpdateSpaceTypeRequest;
-import com.example.demo.model.dto.response.SpaceTypeResponse;
 import com.example.demo.model.dto.spacetype.SpaceTypeCreateDTO;
 import com.example.demo.model.dto.spacetype.SpaceTypeDTO;
 import com.example.demo.model.dto.spacetype.SpaceTypeUpdateDTO;
