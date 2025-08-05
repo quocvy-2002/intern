@@ -114,3 +114,52 @@ ADD CONSTRAINT fk_status_log_status
 FOREIGN KEY (status) REFERENCES equipment_status(statusId)
 ON DELETE CASCADE;
 
+SELECT * FROM uhoo_device;
+SELECT * FROM space;
+SELECT * FROM equipment;
+SELECT * FROM equipment_type;
+SELECT * FROM equipment_status_log;
+SELECT * FROM equipment_usage_history;
+SELECT * FROM equipment_status;
+SELECT * FROM provider;
+SELECT * FROM equipment_value;
+
+CREATE TABLE device_status_log (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    device_id VARCHAR(100) NOT NULL,
+    code VARCHAR(100) NOT NULL,
+    value TEXT,
+    timestamp BIGINT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE uhoo_device (
+    id SERIAL PRIMARY KEY,
+    device_id VARCHAR(100) UNIQUE NOT NULL,      
+    name VARCHAR(255),
+    location VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE uhoo_measurement_data (
+    id SERIAL PRIMARY KEY,
+    device_id VARCHAR(100) NOT NULL,          
+    timestamp TIMESTAMP NOT NULL,             
+    temperature DECIMAL(5,2),
+    humidity DECIMAL(5,2),
+    pm2_5 DECIMAL(6,2),
+    co2 DECIMAL(6,2),
+    tvoc DECIMAL(6,2),
+    air_pressure DECIMAL(6,2),
+    ozone DECIMAL(6,2),
+    carbon_monoxide DECIMAL(6,2),
+    nitrogen_dioxide DECIMAL(6,2),
+    noise DECIMAL(6,2),
+    light DECIMAL(6,2),
+    FOREIGN KEY (device_id) REFERENCES uhoo_device(device_id)
+);
+INSERT INTO uhoo_device (device_id, name, location, created_at)
+VALUES ('b0b11342a3cf', 'Industry 4.0 Innovation Center', 'Office Space', CURRENT_TIMESTAMP);
+
+
+

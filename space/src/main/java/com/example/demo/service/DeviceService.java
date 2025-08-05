@@ -6,9 +6,6 @@ import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.model.dto.response.DeviceStateResponse;
 import com.example.demo.model.dto.response.DeviceStatusEntry;
-import com.example.demo.model.dto.response.OperationLogResponse;
-import com.example.demo.model.dto.response.ReportLogResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,7 +26,6 @@ import java.util.*;
 public class DeviceService {
 
     TuyaAuthenticationService tuyaAuthenticationService;
-    ObjectMapper objectMapper = new ObjectMapper();
 
     private String makeApiRequest(String urlPath, String method, String body) {
         for (int attempt = 0; attempt < 2; attempt++) {
@@ -152,105 +148,6 @@ public class DeviceService {
 
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi lấy trạng thái thiết bị: " + e.getMessage(), e);
-        }
-    }
-
-
-
-
-    public OperationLogResponse getOperationLogs(String deviceId, String type, long startTime, long endTime, String queryType, int size) {
-        try {
-            // Kiểm tra đầu vào
-            if (deviceId == null || deviceId.trim().isEmpty()) {
-                throw new IllegalArgumentException("Device ID không được để trống hoặc null");
-            }
-            if (type == null || type.trim().isEmpty()) {
-                throw new IllegalArgumentException("Type không được để trống hoặc null");
-            }
-            if (startTime >= endTime) {
-                throw new IllegalArgumentException("start_time phải nhỏ hơn end_time");
-            }
-            if (!"1".equals(queryType) && !"2".equals(queryType)) {
-                throw new IllegalArgumentException("query_type phải là 1 hoặc 2");
-            }
-            if (size <= 0) {
-                throw new IllegalArgumentException("size phải lớn hơn 0");
-            }
-
-            // Xây dựng URL với các tham số truy vấn
-            String urlPath = String.format("/v2.0/cloud/thing/%s/logs?type=%s&start_time=%d&end_time=%d&query_type=%s&size=%d",
-                    deviceId, type, startTime, endTime, queryType, size);
-
-            String jsonString = makeApiRequest(urlPath, "GET", null);
-            System.out.println("URL yêu cầu API: " + tuyaAuthenticationService.getBaseUrl() + urlPath);
-            JSONObject responseJson = new JSONObject(jsonString);
-
-            if (!responseJson.optBoolean("success", false)) {
-                throw new RuntimeException("Lấy nhật ký thao tác thất bại cho deviceId=" + deviceId + ": " + responseJson.optString("msg"));
-            }
-
-            JSONArray logsArray = responseJson.getJSONObject("result").optJSONArray("logs");
-
-            OperationLogResponse dto = new OperationLogResponse();
-            dto.setDeviceId(deviceId);
-            List<OperationLogResponse.OperationLogEntry> entries = new ArrayList<>();
-
-            if (logsArray != null) {
-                for (int i = 0; i < logsArray.length(); i++) {
-                    JSONObject log = logsArray.getJSONObject(i);
-                    OperationLogResponse.OperationLogEntry entry = new OperationLogResponse.OperationLogEntry();
-                    entry.setTime(log.optLong("event_time", 0));
-                    entry.setOperator("unknown"); // Không có trong payload
-                    entry.setAction("unknown");   // Không có trong payload
-                    entry.setCode(log.optString("code"));
-                    entry.setValue(log.opt("value"));
-                    entries.add(entry);
-                }
-            }
-
-            dto.setLogs(entries);
-            return dto;
-
-        } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy nhật ký thao tác cho deviceId=" + deviceId + ": " + e.getMessage(), e);
-        }
-    }
-
-    public ReportLogResponse getReportingLogs(String deviceId, String codes, long startTime, long endTime) {
-        try {
-            String urlPath = "/v2.0/cloud/thing/" + deviceId + "/report-logs"
-                    + "?codes=" + (codes != null ? codes : "all")
-                    + "&start_time=" + startTime
-                    + "&end_time=" + endTime;
-            String jsonString = makeApiRequest(urlPath, "GET", null);
-            JSONObject responseJson = new JSONObject(jsonString);
-
-            if (!responseJson.optBoolean("success", false)) {
-                throw new RuntimeException("Lấy nhật ký báo cáo thất bại: " + responseJson.optString("msg"));
-            }
-
-            JSONArray logsArray = responseJson.getJSONObject("result").optJSONArray("logs");
-
-            ReportLogResponse dto = new ReportLogResponse();
-            dto.setDeviceId(deviceId);
-            List<ReportLogResponse.ReportLogEntry> entries = new ArrayList<>();
-
-            if (logsArray != null) {
-                for (int i = 0; i < logsArray.length(); i++) {
-                    JSONObject log = logsArray.getJSONObject(i);
-                    ReportLogResponse.ReportLogEntry entry = new ReportLogResponse.ReportLogEntry();
-                    entry.setTime(log.optLong("event_time", 0));
-                    entry.setCode(log.optString("code"));
-                    entry.setValue(log.opt("value"));
-                    entries.add(entry);
-                }
-            }
-
-            dto.setLogs(entries);
-            return dto;
-
-        } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy nhật ký báo cáo: " + e.getMessage(), e);
         }
     }
 }

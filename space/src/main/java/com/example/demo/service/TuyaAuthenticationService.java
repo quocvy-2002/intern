@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.demo.model.dto.response.TuyaTokenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -165,45 +164,6 @@ public class TuyaAuthenticationService {
         }
     }
 
-    public static class TuyaTokenResponse {
-        private boolean success;
-        private Result result;
-        private long t;
-        private String tid;
-
-        public boolean isSuccess() { return success; }
-        public void setSuccess(boolean success) { this.success = success; }
-
-        public Result getResult() { return result; }
-        public void setResult(Result result) { this.result = result; }
-
-        public long getT() { return t; }
-        public void setT(long t) { this.t = t; }
-
-        public String getTid() { return tid; }
-        public void setTid(String tid) { this.tid = tid; }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class Result {
-            @JsonProperty("access_token")
-            private String accessToken;
-
-            @JsonProperty("refresh_token")
-            private String refreshToken;
-
-            @JsonProperty("expire_time")
-            private int expireTime;
-
-            public String getAccessToken() { return accessToken; }
-            public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
-
-            public String getRefreshToken() { return refreshToken; }
-            public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
-
-            public int getExpireTime() { return expireTime; }
-            public void setExpireTime(int expireTime) { this.expireTime = expireTime; }
-        }
-    }
 
     public String hmacSHA256(String data, String key) throws Exception {
         Mac hmacSha256 = Mac.getInstance("HmacSHA256");
