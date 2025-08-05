@@ -26,7 +26,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Slf4j
 @Service
@@ -113,39 +112,7 @@ public class UHooService {
         return response;
     }
 
-//    public UHooMeasurementDataResponse getSensorData(String macAddress) {
-//        String token = getToken();
-//
-//        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-//        formData.add("macAddress", macAddress);
-//        formData.add("mode", "minute");
-//
-//        // Gọi API lấy dữ liệu cảm biến
-//        UHooMeasurementDataResponse response = webClient.post()
-//                .uri(props.getDeviceData())
-//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .body(BodyInserters.fromFormData(formData))
-//                .retrieve()
-//                .bodyToMono(UHooMeasurementDataResponse.class)
-//                .block();
-//
-//        if (response != null && response.getData() != null && !response.getData().isEmpty()) {
-//            UHooSensorData latest = response.getData().get(0);
-//
-//            UHooMeasurementData entity = dataMapper.toEntity(latest);
-//
-//            UHooDevice device = deviceRepository.findByMacAddress(macAddress)
-//                    .orElseThrow(() -> new RuntimeException("Device not found: " + macAddress));
-//            entity.setDevice(device);
-//
-//            dataRepository.save(entity);
-//        }
-//
-//        return response;
-//    }
-
-    @Scheduled(fixedRate = 60 * 1000)
+    @Scheduled(fixedRate = 30 *60 * 1000)
     public void autoFetchSensorData() {
         System.out.println("Starting scheduled task to fetch sensor data for all devices at " + new java.util.Date());
 
