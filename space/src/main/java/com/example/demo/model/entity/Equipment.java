@@ -38,6 +38,4 @@ public class Equipment {
     @JoinColumn(name = "equipmentValueId", referencedColumnName = "equipmentValueId")
     EquipmentValue equipmentValue;
 
-
-
 }

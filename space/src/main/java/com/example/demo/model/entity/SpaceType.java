@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "spaceType")
+@Table(name = "space_type")
 public class SpaceType {
 
     @Id
@@ -28,6 +28,4 @@ public class SpaceType {
 
     @OneToMany(mappedBy = "spaceType", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Space> spaces;
-
-
 }

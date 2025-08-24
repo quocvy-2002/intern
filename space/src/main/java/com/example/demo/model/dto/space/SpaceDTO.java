@@ -14,5 +14,6 @@ public class SpaceDTO {
         Integer spaceId;
         String spaceName;
         SpaceTypeResponse spaceType;
+        Integer qEnergySiteId;
         List<SpaceDTO> children;
 }

@@ -37,10 +37,10 @@ public class SpaceService {
             space.setParent(parent);
         }
 
-        SpaceType spaceType = spaceTypeRepository.findById(request.getSpaceTypeId())
+        SpaceType spaceType = spaceTypeRepository.findBySpaceTypeId(request.getSpaceTypeId())
                 .orElseThrow(() -> new AppException(ErrorCode.SPACE_TYPE_NOT_FOUND));
         space.setSpaceType(spaceType);
-
+        space.setQEnergySiteId(request.getQEnergySiteId());
         spaceRepository.save(space);
         return convertToDTOWithChildren(space);
     }
@@ -64,6 +64,7 @@ public class SpaceService {
         return SpaceDTO.builder()
                 .spaceId(space.getSpaceId())
                 .spaceName(space.getSpaceName())
+                .qEnergySiteId(space.getQEnergySiteId())
                 .spaceType(SpaceTypeResponse.builder()
                         .spaceTypeId(space.getSpaceType().getSpaceTypeId())
                         .spaceTypeName(space.getSpaceType().getSpaceTypeName())

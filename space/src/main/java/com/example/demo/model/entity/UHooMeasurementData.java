@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "uhoo_measurement_data")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "uhoo_measurement_data")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UHooMeasurementData {
 

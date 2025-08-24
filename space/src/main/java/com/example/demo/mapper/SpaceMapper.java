@@ -1,5 +1,7 @@
 package com.example.demo.mapper;
 
+
+
 import com.example.demo.model.dto.space.SpaceCreateDTO;
 import com.example.demo.model.dto.space.SpaceDTO;
 import com.example.demo.model.dto.space.SpaceUpdateDTO;
@@ -10,14 +12,14 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface SpaceMapper {
-    @Mapping(target = "spaceName", source = "spaceName")
-    @Mapping(target = "spaceType.spaceTypeId", source = "spaceTypeId")
-    @Mapping(target = "parent.spaceId", source = "parentId")
+
+    @Mapping(target = "spaceType", ignore = true) // sẽ set thủ công
+    @Mapping(target = "parent", ignore = true)
     Space toSpace(SpaceCreateDTO request);
 
     SpaceDTO toSpaceResponse(Space space);
 
-    @Mapping(target = "spaceType.spaceTypeId", source = "spaceTypeId")
-    @Mapping(target = "parent.spaceId", source = "parentId")
+    @Mapping(target = "spaceType", ignore = true)
+    @Mapping(target = "parent", ignore = true)
     void updateSpace(@MappingTarget Space space, SpaceUpdateDTO request);
 }

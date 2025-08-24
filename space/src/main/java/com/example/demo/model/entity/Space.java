@@ -1,10 +1,12 @@
 package com.example.demo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,9 +36,17 @@ public class Space {
     @JsonIgnore
     Space parent;
 
+    @Column(name = "qEnergySiteId", unique = true)
+    Integer  qEnergySiteId;
+
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Space> children;
 
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Equipment> equipments;
+
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "qEnergy-space")
+    @Builder.Default
+    List<QEnergy> qEnergies = new ArrayList<>();
 }

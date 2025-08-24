@@ -1,6 +1,7 @@
 package com.example.demo.model.dto.space;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -18,6 +19,10 @@ public class SpaceCreateDTO {
     @NotNull(message = "IS_REQUIRED")
     Integer spaceTypeId;
 
-    @NotNull(message = "IS_REQUIRED")
     Integer parentId;
+
+    @NotNull(message = "IS_REQUIRED")
+    @JsonProperty("qEnergySiteId")
+    Integer  qEnergySiteId;
+
 }

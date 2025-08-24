@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "uhoo_device")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "uhoo_device")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UHooDevice {
 
