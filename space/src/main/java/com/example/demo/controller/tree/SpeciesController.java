@@ -1,10 +1,10 @@
 package com.example.demo.controller.tree;
 
-import com.example.demo.model.dto.response.ApiResponse;
-import com.example.demo.model.dto.tree.species.SpeciesCreateDTO;
-import com.example.demo.model.dto.tree.species.SpeciesDTO;
-import com.example.demo.model.dto.tree.species.SpeciesUpdateDTO;
-import com.example.demo.service.tree.SpeciesService;
+import com.example.SmartBuildingBackend.model.dto.api.ApiResponse;
+import com.example.SmartBuildingBackend.model.dto.tree.species.SpeciesCreateDTO;
+import com.example.SmartBuildingBackend.model.dto.tree.species.SpeciesDTO;
+import com.example.SmartBuildingBackend.model.dto.tree.species.SpeciesUpdateDTO;
+import com.example.SmartBuildingBackend.service.tree.SpeciesService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,11 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/species")
 public class SpeciesController {
 
@@ -35,7 +35,7 @@ public class SpeciesController {
     }
 
     @PutMapping("/{speciesId}")
-    public ApiResponse<SpeciesDTO> update(@PathVariable UUID speciesId,
+    public ApiResponse<SpeciesDTO> update(@PathVariable Long speciesId,
                                           @RequestBody SpeciesUpdateDTO request) {
         return ApiResponse.<SpeciesDTO>builder()
                 .result(speciesService.updateSpecies(speciesId, request))
@@ -43,12 +43,12 @@ public class SpeciesController {
     }
 
     @DeleteMapping("/{speciesId}")
-    public void delete(@PathVariable UUID speciesId) {
+    public void delete(@PathVariable Long speciesId) {
         speciesService.deleteSpecies(speciesId);
     }
 
     @GetMapping("/{speciesId}")
-    public ApiResponse<SpeciesDTO> getById(@PathVariable UUID speciesId) {
+    public ApiResponse<SpeciesDTO> getById(@PathVariable Long speciesId) {
         return ApiResponse.<SpeciesDTO>builder()
                 .result(speciesService.getSpeciesById(speciesId))
                 .build();
@@ -68,11 +68,6 @@ public class SpeciesController {
                 .build();
     }
 
-    // ========== Import/Export Excel ==========
-
-    //| **A** (0)       | **B** (1)  | **C** (2)    | **D** (3) | **E** (4) | **F** (5) |
-    //| --------------- | ---------- | ------------ | --------- | --------- | --------- |
-    //| Scientific Name | Local Name | Wood Density | CoeffB0   | CoeffB1   | CoeffB2   |
     @PostMapping("/import")
     public ApiResponse<List<SpeciesDTO>> importExcel(@RequestParam("file") MultipartFile file) {
         return ApiResponse.<List<SpeciesDTO>>builder()

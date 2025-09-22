@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,4 +20,10 @@ public class ZoneCreateDTO {
 
     @NotNull(message = "IS_REQUIRED")
     String boundaryWkt;
+
+    @NotNull(message = "IS_REQUIRED")
+    BigDecimal area;
+
+    @NotNull(message = "IS_REQUIRED")
+    BigDecimal nonGreenArea;
 }

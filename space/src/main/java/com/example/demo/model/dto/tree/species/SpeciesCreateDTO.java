@@ -30,4 +30,10 @@ public class SpeciesCreateDTO {
 
     @NotNull(message = "IS_REQUIRED")
     BigDecimal coeffB2;
+
+    @NotNull(message = "IS_REQUIRED")
+    Double  lai;
+
+    @NotNull(message = "IS_REQUIRED")
+    BigDecimal plantFactor;
 }

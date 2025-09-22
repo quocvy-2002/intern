@@ -3,8 +3,8 @@ package com.example.demo.model.dto.tree.zone;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -12,10 +12,12 @@ import java.util.UUID;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ZoneDTO {
-    UUID zoneId;
+    Long zoneId;
     String zoneName;
     String zoneType;
     String boundaryWkt;
+    BigDecimal area;
+    BigDecimal nonGreenArea;
     Boolean isActive;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

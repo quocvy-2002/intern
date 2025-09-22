@@ -3,6 +3,8 @@ package com.example.demo.model.dto.tree.zone;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,5 +17,9 @@ public class ZoneUpdateDTO {
 
     String boundaryWkt;
 
+    BigDecimal area;
+
     Boolean isActive;
+
+    BigDecimal nonGreenArea;
 }

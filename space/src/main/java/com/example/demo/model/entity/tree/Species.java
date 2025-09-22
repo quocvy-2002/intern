@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,11 +16,10 @@ import java.util.UUID;
 @Table(name = "species")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Species {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "species_id", columnDefinition = "BINARY(16)")
-    UUID speciesId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "species_id")
+    Long speciesId;
 
     @Column(name = "scientific_name", nullable = false, unique = true, length = 255)
     String scientificName;
@@ -41,6 +39,13 @@ public class Species {
     @Column(name = "coeff_b2", precision = 10, scale = 4)
     BigDecimal coeffB2;
 
+    @Column(name = "lai")
+    Double  lai;
+
     @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
+
+    @Column(name= ("plant_factor"))
+    BigDecimal plantFactor;
+
 }

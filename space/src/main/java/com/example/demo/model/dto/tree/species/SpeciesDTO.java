@@ -5,7 +5,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -13,12 +12,15 @@ import java.util.UUID;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpeciesDTO {
-    UUID speciesId;
+    Long speciesId;
     String scientificName;
     String localName;
     BigDecimal woodDensity;
     BigDecimal coeffB0;
     BigDecimal coeffB1;
     BigDecimal coeffB2;
+    Double  lai;
     LocalDateTime createdAt;
+    BigDecimal plantFactor;
+    Integer totalTree;
 }

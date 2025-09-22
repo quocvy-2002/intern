@@ -1,11 +1,12 @@
 package com.example.demo.model.entity.tree;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,8 +18,9 @@ import java.util.UUID;
 public class CarbonSnapshot {
 
     @Id
-    @Column(name = "snapshot_id", columnDefinition = "BINARY(16)")
-    UUID snapshotId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "snapshot_id")
+    Long snapshotId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zone_id")

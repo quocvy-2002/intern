@@ -1,12 +1,12 @@
 package com.example.demo.model.dto.tree.tree;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -14,17 +14,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TreeUpdateDTO {
-    @NotNull(message = "IS_REQUIRED")
-    UUID speciesId;
+    String localName;
 
-    @NotNull(message = "IS_REQUIRED")
-    UUID zoneId;
+    String zoneName;
 
-    @NotNull(message = "IS_REQUIRED")
+    @DecimalMin(value = "-90.0", message = "LATITUDE_OUT_OF_RANGE")
+    @DecimalMax(value = "90.0", message = "LATITUDE_OUT_OF_RANGE")
     Double latitude;
 
-    @NotNull(message = "IS_REQUIRED")
+    @DecimalMin(value = "-180.0", message = "LONGITUDE_OUT_OF_RANGE")
+    @DecimalMax(value = "180.0", message = "LONGITUDE_OUT_OF_RANGE")
     Double longitude;
+
+    String imgUrl;
 
     LocalDate plantedDate;
 

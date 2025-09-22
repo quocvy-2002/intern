@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Getter
@@ -19,19 +19,19 @@ import java.util.regex.Pattern;
 })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Zone {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "zone_id", columnDefinition = "BINARY(16)")
-    UUID zoneId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "zone_id")
+    Long zoneId;
 
     @Column(name = "zone_name", nullable = false, length = 255, unique = true)
     String zoneName;
 
+    @Builder.Default
     @Column(name = "zone_type", length = 50)
-    String zoneType;
+    String zoneType = "other";
 
-    @Column(name = "boundary_wkt", columnDefinition = "TEXT")
+    @Column(name = "boundary_wkt", columnDefinition = "NVARCHAR(MAX)")
     String boundaryWkt;
 
     @Builder.Default
@@ -43,6 +43,12 @@ public class Zone {
 
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+
+    @Column(name = "area", precision = 20, scale = 4)
+    BigDecimal area;
+
+    @Column(name = "non_green_area", precision = 20, scale = 4)
+    BigDecimal nonGreenArea;
 
     public void setBoundaryWkt(String wkt) {
         System.out.println("Input WKT: " + wkt); // Debug log
@@ -65,7 +71,6 @@ public class Zone {
     }
 
     private boolean isValidWktFormat(String wkt) {
-        // Regex chi tiết hơn cho POLYGON
         Pattern pattern = Pattern.compile(
                 "^(POLYGON|MULTIPOLYGON|POINT|MULTIPOINT|LINESTRING|MULTILINESTRING|GEOMETRYCOLLECTION)\\s*\\(.+\\)$",
                 Pattern.CASE_INSENSITIVE

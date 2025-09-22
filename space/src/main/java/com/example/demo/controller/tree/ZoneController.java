@@ -1,23 +1,27 @@
 package com.example.demo.controller.tree;
 
-import com.example.demo.model.dto.response.ApiResponse;
-import com.example.demo.model.dto.tree.zone.ZoneCreateDTO;
-import com.example.demo.model.dto.tree.zone.ZoneDTO;
-import com.example.demo.model.dto.tree.zone.ZoneUpdateDTO;
-import com.example.demo.service.tree.ZoneService;
+import com.example.SmartBuildingBackend.model.dto.api.ApiResponse;
+import com.example.SmartBuildingBackend.model.dto.tree.zone.ZoneCreateDTO;
+import com.example.SmartBuildingBackend.model.dto.tree.zone.ZoneDTO;
+import com.example.SmartBuildingBackend.model.dto.tree.zone.ZoneUpdateDTO;
+import com.example.SmartBuildingBackend.service.tree.ZoneService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/zones")
 public class ZoneController {
 
@@ -31,7 +35,7 @@ public class ZoneController {
     }
 
     @GetMapping("/{zoneId}")
-    public ApiResponse<ZoneDTO> getZone(@PathVariable UUID zoneId) {
+    public ApiResponse<ZoneDTO> getZone(@PathVariable Long zoneId) {
         return ApiResponse.<ZoneDTO>builder()
                 .result(zoneService.getZoneById(zoneId))
                 .build();
@@ -45,13 +49,13 @@ public class ZoneController {
     }
 
     @DeleteMapping("/{zoneId}")
-    public void deleteZone(@PathVariable UUID zoneId) {
+    public void deleteZone(@PathVariable Long zoneId) {
         zoneService.deleteZone(zoneId);
     }
 
     @PutMapping("/{zoneId}")
     public ApiResponse<ZoneDTO> updateZone(
-            @PathVariable UUID zoneId,
+            @PathVariable Long zoneId,
             @Valid @RequestBody ZoneUpdateDTO request
     ) {
         return ApiResponse.<ZoneDTO>builder()
@@ -59,15 +63,19 @@ public class ZoneController {
                 .build();
     }
 
-    //| Zone Name | Zone Type | Boundary WKT                                                                    |
-    //| --------- | --------- | ------------------------------------------------------------------------------- |
-    //| Zone A    | Forest    | POLYGON((105.85 21.02, 105.86 21.02, 105.86 21.03, 105.85 21.03, 105.85 21.02)) |
-    //| Zone B    | Lake      | POLYGON((105.87 21.01, 105.88 21.01, 105.88 21.02, 105.87 21.02, 105.87 21.01)) |
-    //| Zone C    | Urban     | POLYGON((105.83 21.00, 105.84 21.00, 105.84 21.01, 105.83 21.01, 105.83 21.00)) |
     @PostMapping("/import")
     public ApiResponse<List<ZoneDTO>> importZones(@RequestParam("file") MultipartFile file) {
         return ApiResponse.<List<ZoneDTO>>builder()
                 .result(zoneService.importZonesFromExcel(file))
                 .build();
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportExcel() {
+        ByteArrayInputStream in = zoneService.exportZoneToExcel();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=species.xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(in.readAllBytes());
     }
 }
